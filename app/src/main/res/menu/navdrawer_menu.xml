@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/parametersFragment"
+        android:title="@string/param_tres" />
+    <item
+        android:id="@+id/selectionFragment"
+        android:title="@string/s_l_ction_des_photos" />
+    <item
+        android:id="@+id/accessFragment"
+        android:title="@string/acc_s_vers_la_galerie" />
+</menu>

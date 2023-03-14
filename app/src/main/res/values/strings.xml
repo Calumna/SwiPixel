@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">SwiPixel</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_parameters">hello_parameters !</string>
+    <string name="hello_home_page">hello_home_page !</string>
+    <string name="hello_selection_photo">hello_selection_photo !</string>
+    <string name="hello_gallery_acces">hello_gallery_acces</string>
+    <string name="acc_s_vers_la_galerie">Accès vers la galerie</string>
+    <string name="s_l_ction_des_photos">Séléction des photos</string>
+    <string name="param_tres">Paramètres</string>
+    <string name="hello_swipixel">Hello SwiPixel !</string>
 </resources>
