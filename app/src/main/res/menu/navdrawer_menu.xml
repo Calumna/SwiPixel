@@ -3,11 +3,14 @@
 
     <item
         android:id="@+id/parametersFragment"
+        android:icon="@drawable/settings"
         android:title="@string/param_tres" />
     <item
         android:id="@+id/selectionFragment"
+        android:icon="@drawable/addphoto"
         android:title="@string/s_l_ction_des_photos" />
     <item
         android:id="@+id/accessFragment"
+        android:icon="@drawable/library"
         android:title="@string/acc_s_vers_la_galerie" />
 </menu>

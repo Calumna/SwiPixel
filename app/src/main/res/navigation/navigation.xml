@@ -8,21 +8,21 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.uqac.swipixel.fragment_home"
-        android:label="fragment_home"
+        android:label="Swipixel"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/parametersFragment"
         android:name="com.uqac.swipixel.parametersFragment"
-        android:label="fragment_parameters"
+        android:label="Paramètres"
         tools:layout="@layout/fragment_parameters" />
     <fragment
         android:id="@+id/selectionFragment"
         android:name="com.uqac.swipixel.selectionFragment"
-        android:label="fragment_selection"
+        android:label="Séléction des photos"
         tools:layout="@layout/fragment_selection" />
     <fragment
         android:id="@+id/accessFragment"
         android:name="com.uqac.swipixel.accessFragment"
-        android:label="fragment_access"
+        android:label="Accès vers la galerie"
         tools:layout="@layout/fragment_access" />
 </navigation>
