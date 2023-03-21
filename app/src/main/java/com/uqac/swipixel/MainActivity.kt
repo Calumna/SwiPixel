@@ -5,7 +5,6 @@ import android.content.Intent
 import android.view.Menu
 import android.view.MenuItem
 import android.app.Activity
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -68,9 +67,10 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             else -> {
-                item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
+                super.onOptionsItemSelected(item)
             }
         }
+    }
 
     // Test image random depuis la galerie
     fun pickPhoto(view : View){
