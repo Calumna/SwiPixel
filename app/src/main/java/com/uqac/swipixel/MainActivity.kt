@@ -1,5 +1,9 @@
 package com.uqac.swipixel
 
+
+import android.content.Intent
+import android.view.Menu
+import android.view.MenuItem
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -20,6 +24,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.onNavDestinationSelected
 import com.uqac.swipixel.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -46,6 +51,26 @@ class MainActivity : AppCompatActivity() {
         val navController = this.findNavController(R.id.myNavHostFragment)
         return NavigationUI.navigateUp(navController, drawerLayout)
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.options_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val navController = findNavController(R.id.myNavHostFragment)
+        return when (item.itemId) {
+            R.id.accessGallery -> {
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.type = "image/*"
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+                true
+            }
+            else -> {
+                item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
+            }
+        }
 
     // Test image random depuis la galerie
     fun pickPhoto(view : View){
