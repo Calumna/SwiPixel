@@ -13,5 +13,7 @@
 
         <!-- Customize your theme here. -->
         <item name="android:colorBackground">?attr/backgroundColor</item>
+
+        <item name="android:fontFamily">@font/montserrat</item>
     </style>
 </resources>
