@@ -18,29 +18,35 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
-import com.uqac.swipixel.databinding.ActivityMainBinding
+import com.google.android.material.navigation.NavigationView
 
-class MainActivity : AppCompatActivity() {
+class MainActivity() : AppCompatActivity() {
+
     private lateinit var drawerLayout: DrawerLayout
+
     // variable pour afficher une photo de la galerie
     var pickedPhoto : Uri? = null
     var pickedBitMap : Bitmap? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        @Suppress("UNUSED_VARIABLE")
-        val binding =
-            DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
-        drawerLayout = binding.drawerLayout
-        val navController = this.findNavController(R.id.myNavHostFragment)
+        setContentView(R.layout.activity_main);
+        drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
+
+        val navView =  findViewById<NavigationView>(R.id.navView)
+
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.myNavHostFragment) as NavHostFragment
+        val navController = navHostFragment.navController
+
         NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
-        NavigationUI.setupWithNavController(binding.navView, navController)
+        NavigationUI.setupWithNavController(navView, navController)
 
         // Ecouter le bouton pour charger l'image
-        val pickButton : Button = findViewById(R.id.button)
-        pickButton.setOnClickListener { pickPhoto(this.drawerLayout) }
+        //val pickButton : Button = findViewById(R.id.button)
+        pickPhoto(this.drawerLayout)
     }
+
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = this.findNavController(R.id.myNavHostFragment)

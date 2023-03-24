@@ -7,8 +7,8 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.uqac.swipixel.fragment_home"
-        android:label="Swipixel"
+        android:name="com.uqac.swipixel.HomeFragment"
+        android:label="SwiPixel"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/parametersFragment"
