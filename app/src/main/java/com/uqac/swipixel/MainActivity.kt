@@ -26,9 +26,7 @@ class MainActivity() : AppCompatActivity() {
 
     private lateinit var drawerLayout: DrawerLayout
 
-    // variable pour afficher une photo de la galerie
-    var pickedPhoto : Uri? = null
-    var pickedBitMap : Bitmap? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main);
@@ -43,8 +41,7 @@ class MainActivity() : AppCompatActivity() {
         NavigationUI.setupWithNavController(navView, navController)
 
         // Ecouter le bouton pour charger l'image
-        //val pickButton : Button = findViewById(R.id.button)
-        pickPhoto(this.drawerLayout)
+
     }
 
 
@@ -54,32 +51,7 @@ class MainActivity() : AppCompatActivity() {
     }
 
     // Test image random depuis la galerie
-    fun pickPhoto(view : View){
-        if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) !=
-                    PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 1)
-            } else {
-                val galerieIntext = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                startActivityForResult(galerieIntext, 2)
-        }
-    }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val photo : ImageView = findViewById(R.id.imageView)
-        if(requestCode == 2 && resultCode == Activity.RESULT_OK && data != null){
-            pickedPhoto = data.data
-            if(pickedPhoto != null){
-                if(Build.VERSION.SDK_INT >= 28) {
-                    val source = ImageDecoder.createSource(this.contentResolver, pickedPhoto!!)
-                    pickedBitMap = ImageDecoder.decodeBitmap(source)
-                    photo.setImageBitmap(pickedBitMap)
-                }
-                else {
-                    pickedBitMap = MediaStore.Images.Media.getBitmap(this.contentResolver, pickedPhoto)
-                    photo.setImageBitmap(pickedBitMap)
-                }
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data)
-    }
+
+
 }

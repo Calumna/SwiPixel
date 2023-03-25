@@ -1,3 +1,5 @@
 package com.uqac.swipixel
 
-data class SwiperData(var image : Int )
+import android.net.Uri
+
+data class SwiperData(var image : Uri)

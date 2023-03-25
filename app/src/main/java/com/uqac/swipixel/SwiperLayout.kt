@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
+import android.widget.TextView
 import androidx.annotation.Px
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -56,7 +57,7 @@ class SwiperLayout(private val maxUnderCardVisible: Int) : RecyclerView.LayoutMa
     }
 
     override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State) {
-        //Log.i("PARENT", "$parentLeft $parentTop $parentRight $parentBottom" )
+
         if(childCount > 0){
             var i = 0
             do {
@@ -66,10 +67,9 @@ class SwiperLayout(private val maxUnderCardVisible: Int) : RecyclerView.LayoutMa
                     //Log.i("CHILD", "${top.x} ${top.y} ${top.x + top.width} ${top.y + top.height}" )
                     if((top.x + top.width) < parentLeft || top.x > parentRight
                         || (top.y + top.height) < parentTop  || top.y > parentBottom){
-                        Log.i("DEBUG 0", childCount.toString())
                         removeAndRecycleView(it, recycler)
+                        resetCard(it)
                         swipedImageCount++
-                        Log.i("DEBUG 1", childCount.toString())
                     } else {
                         i = childCount
                     }
@@ -96,6 +96,8 @@ class SwiperLayout(private val maxUnderCardVisible: Int) : RecyclerView.LayoutMa
 
             val heightOffset = if(index <  maxUnderCardVisible) index * visibleUnderCardSize else maxUnderCardVisible * visibleUnderCardSize
             view.cardElevation = if( index < maxUnderCardVisible) (maxUnderCardVisible - index) * 15f else 0f
+            view.translationX = 0f
+            view.translationY = 0f
             addView(view, index)
             measureChildWithMargins(view, 0,maxUnderCardVisible * visibleUnderCardSize)
 
@@ -107,9 +109,9 @@ class SwiperLayout(private val maxUnderCardVisible: Int) : RecyclerView.LayoutMa
                 parentRight,
                 parentBottom + heightOffset - (maxUnderCardVisible * visibleUnderCardSize) )
         }
+    }
 
-
-
+    private fun resetCard(view: View){
     }
 
 

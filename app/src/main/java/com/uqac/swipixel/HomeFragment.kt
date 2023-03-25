@@ -1,11 +1,26 @@
 package com.uqac.swipixel
 
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.ext.SdkExtensions.getExtensionVersion
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -16,31 +31,36 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private lateinit var cardDeck: Swiper
 
+    // variable pour afficher une photo de la galerie
+    var selectedImage: List<SwiperData> = ArrayList<SwiperData>()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        //setHasOptionsMenu(true)
-        val images = arrayOf(
-            R.drawable.a,
-            R.drawable.b,
-            R.drawable.c,
-            R.drawable.d,
-            R.drawable.e,
-            R.drawable.f,
-        )
+        // setHasOptionsMenu(true)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
-        cardDeck = root.findViewById<Swiper>(R.id.cardDeck);
 
-        val dataList = arrayListOf<SwiperData>()
-        for(i in images.indices){
-            val data = SwiperData(images[i])
-            dataList.add(data)
+        val adapter = SwiperAdapter()
+        val pickMultipleMedia = registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(5)) { uris ->
+            // Callback is invoked after the user selects media items or closes the
+            // photo picker.
+            if (uris.isNotEmpty()) {
+                selectedImage = uris.map {
+                    SwiperData(it)
+                }
+                adapter.addData(selectedImage)
+            }
         }
-        cardDeck.adapter = SwiperAdapter(dataList)
 
-        return root
+        // Ecouter le bouton pour charger l'image
+        val pickButton = root.findViewById<Button>(R.id.button)
+        pickButton.setOnClickListener { pickMultipleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }
+
+        cardDeck = root.findViewById<Swiper>(R.id.cardDeck);
+        cardDeck.adapter = adapter
+        return root;
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
