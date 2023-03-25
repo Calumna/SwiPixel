@@ -10,6 +10,9 @@
     <string name="s_l_ction_des_photos">Séléction des photos</string>
     <string name="param_tres">Paramètres</string>
     <string name="hello_swipixel">Hello SwiPixel !</string>
+    <string name="btn_reject">Bouton de rejet</string>
+    <string name="btn_like">Bouton de like</string>
+    <string name="sortPicture">Image à trier</string>
     <string name="button">Button</string>
     <string name="imagerdm">imagerdm</string>
     <string name="pick_a_photo">Pick a photo</string>
