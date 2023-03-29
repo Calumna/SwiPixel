@@ -10,6 +10,8 @@ import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class LoginActivity : AppCompatActivity() {
 
@@ -20,6 +22,15 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        val user = Firebase.auth.currentUser
+        if (user != null) {
+            // User is signed in
+            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+            finish()
+        } else {
+            // No user is signed in
+        }
 
         tvRegister = findViewById(R.id.tv_register)
 
