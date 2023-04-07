@@ -4,21 +4,8 @@ package com.uqac.swipixel
 import android.content.Intent
 import android.view.Menu
 import android.view.MenuItem
-import android.app.Activity
-import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.ImageDecoder
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
-import android.view.View
-import android.widget.Button
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -28,7 +15,6 @@ import com.google.android.material.navigation.NavigationView
 class MainActivity() : AppCompatActivity() {
 
     private lateinit var drawerLayout: DrawerLayout
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,9 +28,6 @@ class MainActivity() : AppCompatActivity() {
 
         NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
         NavigationUI.setupWithNavController(navView, navController)
-
-        // Ecouter le bouton pour charger l'image
-
     }
 
 
@@ -73,9 +56,4 @@ class MainActivity() : AppCompatActivity() {
             }
         }
     }
-
-    // Test image random depuis la galerie
-
-
-
 }

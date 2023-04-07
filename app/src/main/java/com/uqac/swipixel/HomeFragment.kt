@@ -43,7 +43,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
 
         val adapter = SwiperAdapter()
-        val pickMultipleMedia = registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(5)) { uris ->
+        val pickMultipleMedia = registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(1000)) { uris ->
             // Callback is invoked after the user selects media items or closes the
             // photo picker.
             if (uris.isNotEmpty()) {
