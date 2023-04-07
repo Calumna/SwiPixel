@@ -26,4 +26,6 @@
     <string name="don_t_have_an_account">Don\'t have an account</string>
     <string name="login_page">LOGIN PAGE</string>
     <string name="logout">LOGOUT</string>
+    <string name="login_with_google_account">Login with Google account :</string>
+    <string name="web_client_id">1011379569359-s3fqcampg8gddln38rdptq0pjujderni.apps.googleusercontent.com</string>
 </resources>
