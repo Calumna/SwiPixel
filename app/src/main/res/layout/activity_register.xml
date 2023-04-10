@@ -55,19 +55,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="16dp"
         android:hint="@string/password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/til_register_email">
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_register_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autofillHints=""
             android:inputType="textPassword"
-            tools:text="123456789" />
+            android:drawableEnd="@drawable/visibility"
+            app:passwordToggleEnabled="true"
+            tools:ignore="LabelFor"
+            tools:text="123456" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button

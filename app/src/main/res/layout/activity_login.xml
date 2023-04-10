@@ -46,10 +46,10 @@
             android:id="@+id/et_login_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            tools:text="abc@gmail.com"
             android:autofillHints=""
-            tools:ignore="LabelFor" />
+            android:inputType="textEmailAddress"
+            tools:ignore="LabelFor"
+            tools:text="abc@gmail.com" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -64,15 +64,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/til_login_email">
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_login_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            tools:text="123456"
             android:autofillHints=""
-            tools:ignore="LabelFor" />
+            android:inputType="textPassword"
+            android:drawableEnd="@drawable/visibility"
+            app:passwordToggleEnabled="true"
+            tools:ignore="LabelFor"
+            tools:text="123456" />
+
     </com.google.android.material.textfield.TextInputLayout>
+
+
+
 
     <Button
         android:id="@+id/btn_login"
@@ -89,9 +95,9 @@
         android:textColor="@color/off_white"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/til_login_password"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/til_login_password" />
 
     <LinearLayout
         android:id="@+id/tv_layout"
@@ -101,7 +107,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_login" >
+        app:layout_constraintTop_toBottomOf="@id/btn_login">
 
         <TextView
             android:id="@+id/tv_no_account"
@@ -126,8 +132,8 @@
         android:id="@+id/tv_google"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/login_with_google_account"
         android:layout_marginTop="30dp"
+        android:text="@string/login_with_google_account"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_layout" />
@@ -141,7 +147,6 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="30dp"
-        app:layout_constraintTop_toBottomOf="@id/tv_google"
-        />
+        app:layout_constraintTop_toBottomOf="@id/tv_google" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

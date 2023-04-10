@@ -6,12 +6,13 @@ import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.InputType
 import android.text.TextUtils
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.view.MotionEvent
+import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -19,6 +20,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
+import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -30,6 +32,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var tvRegister : TextView
     private lateinit var etLoginEmail: EditText
     private lateinit var etLoginPassword: EditText
+    private var isPasswordVisible: Boolean = false
 
     private lateinit var btSignIn: SignInButton
     private lateinit var googleSignInClient: GoogleSignInClient
@@ -58,7 +61,17 @@ class LoginActivity : AppCompatActivity() {
 
         val btnLogin = findViewById<Button>(R.id.btn_login)
         etLoginEmail = findViewById(R.id.et_login_email)
-        etLoginPassword = findViewById(R.id.et_login_password)
+
+        val passwordToggle = findViewById<TextInputEditText>(R.id.et_login_password)
+        passwordToggle.setOnClickListener {
+            isPasswordVisible = !isPasswordVisible
+            if (isPasswordVisible) {
+                passwordToggle.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            } else {
+                passwordToggle.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+            }
+        }
+
 
         btnLogin.setOnClickListener {
             when {

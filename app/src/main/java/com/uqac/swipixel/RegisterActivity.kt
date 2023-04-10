@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Toast
 import android.content.Intent
+import android.text.InputType
 import android.widget.Button
 import android.widget.EditText
 import android.view.View.OnClickListener
@@ -13,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.AuthResult
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.material.textfield.TextInputEditText
 import org.w3c.dom.Text
 
 
@@ -21,6 +23,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var etRegisterEmail: EditText
     private lateinit var etRegisterPassword: EditText
     private lateinit var tvLogin : TextView
+    private var isPasswordVisible: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +33,16 @@ class RegisterActivity : AppCompatActivity() {
 
         tvLogin.setOnClickListener {
             startActivity(Intent(this@RegisterActivity, LoginActivity::class.java))
+        }
+
+        val passwordToggle = findViewById<TextInputEditText>(R.id.et_register_password)
+        passwordToggle.setOnClickListener {
+            isPasswordVisible = !isPasswordVisible
+            if (isPasswordVisible) {
+                passwordToggle.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            } else {
+                passwordToggle.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+            }
         }
 
         val btnRegister = findViewById<Button>(R.id.btn_register)
