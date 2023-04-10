@@ -4,17 +4,17 @@ package com.uqac.swipixel
 import android.app.Activity
 import android.content.ContentValues.TAG
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.InputType
 import android.text.TextUtils
-import android.text.method.HideReturnsTransformationMethod
-import android.text.method.PasswordTransformationMethod
 import android.util.Log
-import android.view.MotionEvent
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -29,9 +29,10 @@ import com.google.firebase.ktx.Firebase
 
 class LoginActivity : AppCompatActivity() {
 
-    private lateinit var tvRegister : TextView
+    private lateinit var tvRegister: TextView
     private lateinit var etLoginEmail: EditText
     private lateinit var etLoginPassword: EditText
+    private lateinit var etLoginConfirmPassword: EditText
     private var isPasswordVisible: Boolean = false
 
     private lateinit var btSignIn: SignInButton
@@ -61,12 +62,15 @@ class LoginActivity : AppCompatActivity() {
 
         val btnLogin = findViewById<Button>(R.id.btn_login)
         etLoginEmail = findViewById(R.id.et_login_email)
+        etLoginPassword = findViewById(R.id.et_login_password)
+        etLoginConfirmPassword = findViewById(R.id.et_login_confirm_password)
 
-        val passwordToggle = findViewById<TextInputEditText>(R.id.et_login_password)
+        val passwordToggle = etLoginPassword
         passwordToggle.setOnClickListener {
             isPasswordVisible = !isPasswordVisible
             if (isPasswordVisible) {
-                passwordToggle.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                passwordToggle.inputType =
+                    InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             } else {
                 passwordToggle.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
             }
@@ -90,6 +94,15 @@ class LoginActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
+
+                etLoginPassword.text.toString() != etLoginConfirmPassword.text.toString() -> {
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "Passwords do not match",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
                 else -> {
                     val email: String = etLoginEmail.text.toString().trim { it <= ' ' }
                     val password: String = etLoginPassword.text.toString().trim { it <= ' ' }
@@ -145,18 +158,19 @@ class LoginActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        googleSignInLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val intent = result.data
-                val task = GoogleSignIn.getSignedInAccountFromIntent(intent)
-                try {
-                    val account = task.getResult(ApiException::class.java)
-                    firebaseAuthWithGoogle(account!!.idToken!!)
-                } catch (e: ApiException) {
-                    Log.w(TAG, "Google sign in failed", e)
+        googleSignInLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val intent = result.data
+                    val task = GoogleSignIn.getSignedInAccountFromIntent(intent)
+                    try {
+                        val account = task.getResult(ApiException::class.java)
+                        firebaseAuthWithGoogle(account!!.idToken!!)
+                    } catch (e: ApiException) {
+                        Log.w(TAG, "Google sign in failed", e)
+                    }
                 }
             }
-        }
     }
 
     private fun firebaseAuthWithGoogle(idToken: String) {
