@@ -7,12 +7,12 @@
         android:layout_margin="20dp"
         app:cardCornerRadius="25dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/holo_blue_bright">
+            android:background="@color/off_white">
 
-            <ImageView
+        <ImageView
                 android:id="@+id/swipeMedia"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -20,14 +20,13 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
-                android:background="@color/red"
                 android:contentDescription="@string/sortPicture"
                 app:layout_constraintBottom_toTopOf="@+id/swipeLike"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageButton
+        <ImageButton
                 android:id="@+id/swipeReject"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
@@ -42,7 +41,7 @@
                 app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <ImageButton
+        <ImageButton
                 android:id="@+id/swipeLike"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
@@ -56,5 +55,5 @@
                 app:layout_constraintStart_toEndOf="@+id/swipeReject"
                 app:layout_constraintTop_toTopOf="@+id/swipeReject" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

@@ -28,6 +28,9 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="?attr/backgroundColor"
+        app:itemIconTint="?attr/colorOnBackground"
         app:menu="@menu/navdrawer_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
+

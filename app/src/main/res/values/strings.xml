@@ -16,4 +16,6 @@
     <string name="button">Button</string>
     <string name="imagerdm">imagerdm</string>
     <string name="pick_a_photo">Pick a photo</string>
+    <string name="vider_la_corbeille">Vider la corbeille</string>
+    <string name="swiper">swiper</string>
 </resources>

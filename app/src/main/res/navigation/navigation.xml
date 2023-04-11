@@ -20,9 +20,4 @@
         android:name="com.uqac.swipixel.selectionFragment"
         android:label="Séléction des photos"
         tools:layout="@layout/fragment_selection" />
-    <fragment
-        android:id="@+id/accessFragment"
-        android:name="com.uqac.swipixel.accessFragment"
-        android:label="Accès vers la galerie"
-        tools:layout="@layout/fragment_access" />
 </navigation>
