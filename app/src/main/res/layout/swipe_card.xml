@@ -49,7 +49,7 @@
                 android:background="@null"
                 android:contentDescription="@string/btn_like"
                 android:scaleType="fitCenter"
-                app:src="@drawable/round_favorite_24"
+                android:src="@drawable/round_favorite_24"
                 app:layout_constraintBottom_toBottomOf="@+id/swipeReject"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/swipeReject"
