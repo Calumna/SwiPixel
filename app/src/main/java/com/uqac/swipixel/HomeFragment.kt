@@ -43,10 +43,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val adapter = SwiperAdapter()
 
         // vérifier l'autorisation d'accès aux fichiers
-        if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) !=
-            PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
-        } else {
+//        if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) !=
+//            PackageManager.PERMISSION_GRANTED){
+//            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
+//        } else {
             val pickMultipleMedia =
                 registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(100)) { uris ->
                     // Callback is invoked after the user selects media items or closes the
@@ -61,7 +61,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             // Ecouter le bouton pour charger l'image
             val pickButton = root.findViewById<Button>(R.id.button)
             pickButton.setOnClickListener { pickMultipleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }
-        }
+//        }
 
         cardDeck = root.findViewById(R.id.cardDeck);
         cardDeck.adapter = adapter
