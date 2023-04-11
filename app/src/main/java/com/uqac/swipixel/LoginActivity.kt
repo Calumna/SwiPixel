@@ -32,7 +32,6 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var tvRegister: TextView
     private lateinit var etLoginEmail: EditText
     private lateinit var etLoginPassword: EditText
-    private lateinit var etLoginConfirmPassword: EditText
     private var isPasswordVisible: Boolean = false
 
     private lateinit var btSignIn: SignInButton
@@ -63,7 +62,6 @@ class LoginActivity : AppCompatActivity() {
         val btnLogin = findViewById<Button>(R.id.btn_login)
         etLoginEmail = findViewById(R.id.et_login_email)
         etLoginPassword = findViewById(R.id.et_login_password)
-        etLoginConfirmPassword = findViewById(R.id.et_login_confirm_password)
 
         val passwordToggle = etLoginPassword
         passwordToggle.setOnClickListener {
@@ -91,14 +89,6 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(
                         this@LoginActivity,
                         "Please enter password",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-                etLoginPassword.text.toString() != etLoginConfirmPassword.text.toString() -> {
-                    Toast.makeText(
-                        this@LoginActivity,
-                        "Passwords do not match",
                         Toast.LENGTH_SHORT
                     ).show()
                 }

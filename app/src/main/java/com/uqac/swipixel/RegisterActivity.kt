@@ -31,7 +31,8 @@ class RegisterActivity : AppCompatActivity() {
         tvLogin.setOnClickListener {
             startActivity(Intent(this@RegisterActivity, LoginActivity::class.java))
         }
-
+        
+        etRegisterPassword = findViewById(R.id.et_register_password)
         val passwordToggle = etRegisterPassword
         passwordToggle.setOnClickListener {
             isPasswordVisible = !isPasswordVisible
