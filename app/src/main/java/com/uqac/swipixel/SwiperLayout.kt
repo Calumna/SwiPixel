@@ -44,8 +44,7 @@ class SwiperLayout(private val maxUnderCardVisible: Int) : RecyclerView.LayoutMa
         )
 
     override fun generateLayoutParams(lp: ViewGroup.LayoutParams?): RecyclerView.LayoutParams {
-        val lp = super.generateLayoutParams(lp)
-        return LayoutParams(lp)
+        return LayoutParams(super.generateLayoutParams(lp))
     }
 
     override fun generateLayoutParams(
@@ -89,13 +88,13 @@ class SwiperLayout(private val maxUnderCardVisible: Int) : RecyclerView.LayoutMa
         val visibleUnderCardSize: Int = 20
 
         for(i in swipedImageCount until itemCount){
-            val view = recycler.getViewForPosition(i) as CardView
+            val view = recycler.getViewForPosition(i) as SwiperCard
 
             val index = i - swipedImageCount
 
 
             val heightOffset = if(index <  maxUnderCardVisible) index * visibleUnderCardSize else maxUnderCardVisible * visibleUnderCardSize
-            view.cardElevation = if( index < maxUnderCardVisible) (maxUnderCardVisible - index) * 15f else 0f
+            view.cardElevation = if( index < maxUnderCardVisible) (maxUnderCardVisible - index) * 10f else 0f
             view.translationX = 0f
             view.translationY = 0f
             addView(view, index)

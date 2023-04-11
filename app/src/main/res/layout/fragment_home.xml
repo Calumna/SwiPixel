@@ -7,12 +7,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.uqac.swipixel.Swiper
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/cardDeck"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:contentDescription="swiper"
-            android:background="@color/purple_200"
             app:layout_constraintBottom_toTopOf="@+id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

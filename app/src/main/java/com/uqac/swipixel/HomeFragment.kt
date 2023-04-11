@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
-    private lateinit var cardDeck: Swiper
+    private lateinit var cardDeck: RecyclerView
 
     // variable pour afficher une photo de la galerie
     var selectedImage: List<SwiperData> = ArrayList<SwiperData>()
@@ -41,6 +41,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         // Inflate the layout for this fragment
         // setHasOptionsMenu(true)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
+        cardDeck = root.findViewById<RecyclerView>(R.id.cardDeck);
 
         val adapter = SwiperAdapter()
         val pickMultipleMedia = registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(5)) { uris ->
@@ -58,8 +59,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val pickButton = root.findViewById<Button>(R.id.button)
         pickButton.setOnClickListener { pickMultipleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }
 
-        cardDeck = root.findViewById<Swiper>(R.id.cardDeck);
+
         cardDeck.adapter = adapter
+        cardDeck.layoutManager =  SwiperLayout(3)
         return root;
     }
 
