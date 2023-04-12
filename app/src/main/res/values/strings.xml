@@ -12,10 +12,14 @@
     <string name="hello_swipixel">Hello SwiPixel !</string>
     <string name="btn_reject">Bouton de rejet</string>
     <string name="btn_like">Bouton de like</string>
+    <string name="btn_delete">Bouton de corbeille</string>
     <string name="sortPicture">Image à trier</string>
     <string name="button">Button</string>
     <string name="imagerdm">imagerdm</string>
     <string name="pick_a_photo">Pick a photo</string>
+    <string name="vider_la_corbeille">Vider la corbeille</string>
+    <string name="swiper">swiper</string>
+    <string name="bin_button">bin button</string>
     <string name="logo">logo</string>
     <string name="register_page">REGISTER PAGE</string>
     <string name="email_id">Email Id</string>

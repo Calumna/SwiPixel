@@ -4,13 +4,8 @@ package com.uqac.swipixel
 import android.content.Intent
 import android.view.Menu
 import android.view.MenuItem
-import android.app.Activity
-import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.ImageDecoder
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
@@ -74,9 +69,4 @@ class MainActivity() : AppCompatActivity() {
             }
         }
     }
-
-    // Test image random depuis la galerie
-
-
-
 }

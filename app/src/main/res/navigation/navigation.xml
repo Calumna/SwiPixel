@@ -9,15 +9,31 @@
         android:id="@+id/homeFragment"
         android:name="com.uqac.swipixel.HomeFragment"
         android:label="SwiPixel"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+                android:id="@+id/action_homeFragment_to_binFragment"
+                app:destination="@id/binFragment" />
+    </fragment>
+    
     <fragment
         android:id="@+id/ParametersFragment"
         android:name="com.uqac.swipixel.ParametersFragment"
         android:label="Paramètres"
         tools:layout="@layout/fragment_parameters" />
+
     <fragment
         android:id="@+id/selectionFragment"
         android:name="com.uqac.swipixel.selectionFragment"
-        android:label="Séléction des photos"
+        android:label="Sélection des photos"
         tools:layout="@layout/fragment_selection" />
+
+    <fragment
+            android:id="@+id/binFragment"
+            android:name="com.uqac.swipixel.BinFragment"
+            android:label="Corbeille" >
+        <argument
+                android:name="deletedImages"
+                app:argType="com.uqac.swipixel.SwiperData[]"/>
+    </fragment>
+
 </navigation>
