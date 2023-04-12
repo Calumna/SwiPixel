@@ -1,18 +1,12 @@
 package com.uqac.swipixel
 
 import android.content.Context
-import android.database.DataSetObserver
 import android.graphics.Color
-import android.net.Uri
 import android.util.AttributeSet
 import android.util.Log
 import android.view.Gravity
 import android.view.MotionEvent
-import android.widget.ArrayAdapter
 import android.widget.FrameLayout
-import androidx.core.view.marginLeft
-import androidx.core.view.marginTop
-import androidx.core.view.setMargins
 
 class Swiper @JvmOverloads constructor(
     context: Context,
