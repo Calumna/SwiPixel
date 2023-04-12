@@ -11,7 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 class SwiperAdapter() : RecyclerView.Adapter<SwiperAdapter.ViewHolder>(), SwiperCardCallBack {
 
     private val dataList: MutableList<SwiperData> = ArrayList<SwiperData>()
-    private var attachedRecyclerView: RecyclerView? = null;
+    private var attachedRecyclerView: RecyclerView? = null
+    var current = 0
+    val deletedImages: MutableList<SwiperData> = ArrayList()
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -60,6 +62,7 @@ class SwiperAdapter() : RecyclerView.Adapter<SwiperAdapter.ViewHolder>(), Swiper
     override fun onAcceptButtonClicked(card: SwiperCard) {
         attachedRecyclerView?.apply {
             card.animateSwipe(card.x, width.toFloat() + 10)
+            current++
             this.requestLayout()
         }
     }
@@ -67,17 +70,17 @@ class SwiperAdapter() : RecyclerView.Adapter<SwiperAdapter.ViewHolder>(), Swiper
     override fun onRejectButtonClicked(card: SwiperCard) {
         attachedRecyclerView?.apply {
             card.animateSwipe(card.x, -10f - card.width)
+            deletedImages.add(dataList[current])
+            current++
             this.requestLayout()
         }
     }
 
     override fun onCardSwipedRight(card: SwiperCard) {
-        attachedRecyclerView?.apply {
-            this.requestLayout()
-        }
+        onAcceptButtonClicked(card)
     }
 
     override fun onCardSwipedLeft(card: SwiperCard) {
-        TODO("Not yet implemented")
+        onRejectButtonClicked(card)
     }
 }

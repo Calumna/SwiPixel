@@ -12,6 +12,7 @@
     <string name="hello_swipixel">Hello SwiPixel !</string>
     <string name="btn_reject">Bouton de rejet</string>
     <string name="btn_like">Bouton de like</string>
+    <string name="btn_delete">Bouton de corbeille</string>
     <string name="sortPicture">Image à trier</string>
     <string name="button">Button</string>
     <string name="imagerdm">imagerdm</string>

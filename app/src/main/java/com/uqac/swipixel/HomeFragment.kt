@@ -1,33 +1,22 @@
 package com.uqac.swipixel
 
-import android.Manifest
-import android.app.Activity
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.ImageDecoder
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
+import androidx.recyclerview.widget.RecyclerView
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
-
     private lateinit var cardDeck: RecyclerView
 
     // variable pour afficher une photo de la galerie
@@ -68,6 +57,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         cardDeck.adapter = adapter
         cardDeck.layoutManager =  SwiperLayout(3)
+
+        val deleteButton = root.findViewById<ImageView>(R.id.delete_button)
+        deleteButton.setOnClickListener {
+            val action = HomeFragmentDirections.actionHomeFragmentToBinFragment((cardDeck.adapter as SwiperAdapter).deletedImages.toTypedArray())
+            findNavController().navigate(action)
+        }
         return root;
     }
 
