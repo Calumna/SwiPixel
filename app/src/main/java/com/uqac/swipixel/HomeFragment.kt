@@ -16,6 +16,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -65,6 +66,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         cardDeck = root.findViewById(R.id.cardDeck);
         cardDeck.adapter = adapter
+
+        //clique sur corbeille
+        val binButton = root.findViewById<ImageButton>(R.id.binButton)
+        binButton.setOnClickListener {
+            findNavController().navigate(R.id.binFragment)
+        }
+
         return root;
     }
 
