@@ -9,12 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 
 class RecycleBinAdaptater(private val deleteImages : List<SwiperData>) : RecyclerView.Adapter<RecycleBinAdaptater.ViewHolder>(){
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val imageView: ImageView = itemView.findViewById<ImageView>(R.id.image_bin)
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.fragment_bin, parent,false);
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.image_item_bin, parent,false);
         return ViewHolder(itemView);
     }
 
@@ -33,4 +29,7 @@ class RecycleBinAdaptater(private val deleteImages : List<SwiperData>) : Recycle
         notifyItemRangeInserted(firstInsert, deleteImages.lastIndex)
     }*/
 
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val imageView: ImageView = itemView.findViewById<ImageView>(R.id.image_bin)
+    }
 }

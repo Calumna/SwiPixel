@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.databinding.DataBindingUtil.setContentView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -27,7 +29,7 @@ class BinFragment : Fragment(R.layout.fragment_bin){
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerView)
 
         // Set the RecyclerView's LayoutManager
-        recyclerView.layoutManager = LinearLayoutManager(activity)
+        recyclerView.layoutManager = GridLayoutManager(activity, 2)
 
         // Set the RecyclerView's Adapter
         recyclerView.adapter = RecycleBinAdaptater(deleteImages)
