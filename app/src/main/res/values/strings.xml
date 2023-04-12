@@ -19,4 +19,5 @@
     <string name="pick_a_photo">Pick a photo</string>
     <string name="vider_la_corbeille">Vider la corbeille</string>
     <string name="swiper">swiper</string>
+    <string name="bin_button">bin button</string>
 </resources>
