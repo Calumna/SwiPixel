@@ -1,18 +1,11 @@
 package com.uqac.swipixel
 
 import android.content.Context
-import android.database.DataSetObserver
-import android.graphics.Color
-import android.net.Uri
 import android.util.AttributeSet
 import android.util.Log
 import android.view.Gravity
 import android.view.MotionEvent
-import android.widget.ArrayAdapter
 import android.widget.FrameLayout
-import androidx.core.view.marginLeft
-import androidx.core.view.marginTop
-import androidx.core.view.setMargins
 
 class Swiper @JvmOverloads constructor(
     context: Context,
@@ -139,7 +132,7 @@ class Swiper @JvmOverloads constructor(
     override fun onRejectButtonClicked(card: SwiperCard) {
         // TODO : Corriger les valeurs hardcodé  (prendre en compte les Margin)
         card.animateSwipe(x - card.width - 60f)
-        deletedImages.add(getCurrentData())
+        deletedImages.add(deck[deck.size-1-currentIndex])
         currentIndex++
     }
 
@@ -153,7 +146,7 @@ class Swiper @JvmOverloads constructor(
     override fun onCardSwipedLeft(card: SwiperCard) {
         if(card.x + (card.width/2) < x){
             card.animateSwipe(x - 10f)
-            deletedImages.add(getCurrentData())
+            deletedImages.add(deck[deck.size-1-currentIndex])
             currentIndex++
         }
     }

@@ -2,15 +2,15 @@ package com.uqac.swipixel
 
 import android.animation.Animator
 import android.animation.Animator.AnimatorListener
-import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
-import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.util.AttributeSet
 import android.util.Log
-import android.view.*
-import android.widget.FrameLayout
+import android.view.GestureDetector
+import android.view.MotionEvent
+import android.view.VelocityTracker
+import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.cardview.widget.CardView
