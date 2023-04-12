@@ -21,9 +21,10 @@ class Swiper @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr), SwiperCardCallBack {
 
     private var activesCards: ArrayList<SwiperCard> = ArrayList()
-    private  var recycledCard: ArrayList<SwiperCard> = ArrayList()
+    private var recycledCard: ArrayList<SwiperCard> = ArrayList()
 
     private var deck: ArrayList<SwiperData> = ArrayList()
+    var deletedImages: ArrayList<SwiperData>  = ArrayList()
 
     private var isCardsCreated: Boolean = false
 
@@ -72,7 +73,7 @@ class Swiper @JvmOverloads constructor(
         Log.d("SWIPER", "activeCardBeforeRender : $activeCardBeforeRender")
         // Placement des nouvelles cartes
         var i = 0
-        while(activesCards.size < maxLoadedCard && currentIndex + activeCardBeforeRender + i < deck.size){
+        while(activesCards.size < maxLoadedCard && currentIndex + activeCardBeforeRender + i < deck.size) {
             val card: SwiperCard = if(recycledCard.isEmpty()){
                 Log.d("SWIPER", "Card creation")
                 createCard()
@@ -104,6 +105,7 @@ class Swiper @JvmOverloads constructor(
     fun revertSwipedCard(){
         if(currentIndex > 0){
             currentIndex--
+            deletedImages.remove(getCurrentData())
             placeCards()
         }
     }
@@ -137,6 +139,7 @@ class Swiper @JvmOverloads constructor(
     override fun onRejectButtonClicked(card: SwiperCard) {
         // TODO : Corriger les valeurs hardcodé  (prendre en compte les Margin)
         card.animateSwipe(x - card.width - 60f)
+        deletedImages.add(getCurrentData())
         currentIndex++
     }
 
@@ -150,6 +153,7 @@ class Swiper @JvmOverloads constructor(
     override fun onCardSwipedLeft(card: SwiperCard) {
         if(card.x + (card.width/2) < x){
             card.animateSwipe(x - 10f)
+            deletedImages.add(getCurrentData())
             currentIndex++
         }
     }

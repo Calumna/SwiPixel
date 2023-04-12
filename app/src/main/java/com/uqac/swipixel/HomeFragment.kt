@@ -52,6 +52,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         // Use this to retrieve the current top Card Data (Uri)
         // getCurrentData()
 
+        val deleteButton = root.findViewById<ImageView>(R.id.delete_button)
+        deleteButton.setOnClickListener {
+            val action = HomeFragmentDirections.actionHomeFragmentToBinFragment(cardDeck.deletedImages.toTypedArray())
+            findNavController().navigate(action)
+        }
+
         return root;
     }
 
