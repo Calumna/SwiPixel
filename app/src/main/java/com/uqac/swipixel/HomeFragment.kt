@@ -17,7 +17,8 @@ import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.RecyclerView
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
-    private lateinit var cardDeck: RecyclerView
+
+    private lateinit var cardDeck: Swiper
 
     // variable pour afficher une photo de la galerie
     var selectedImage: List<SwiperData> = ArrayList()
@@ -28,41 +29,29 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     ): View? {
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_home, container, false)
-        cardDeck = root.findViewById<RecyclerView>(R.id.cardDeck);
 
-        val adapter = SwiperAdapter()
-
-        // vérifier l'autorisation d'accès aux fichiers
-//        if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) !=
-//            PackageManager.PERMISSION_GRANTED){
-//            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
-//        } else {
-            val pickMultipleMedia =
-                registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(100)) { uris ->
-                    // Callback is invoked after the user selects media items or closes the
-                    // photo picker.
-                    if (uris.isNotEmpty()) {
-                        selectedImage = uris.map {
-                            SwiperData(it)
-                        }
-                        adapter.addData(selectedImage)
-                    }
+        cardDeck = root.findViewById<Swiper>(R.id.cardDeck);
+        val pickMultipleMedia = registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(5)) { uris ->
+            // Callback is invoked after the user selects media items or closes the
+            // photo picker.
+            if (uris.isNotEmpty()) {
+                selectedImage = uris.map {
+                    SwiperData(it)
                 }
-            // Ecouter le bouton pour charger l'image
-            val pickButton = root.findViewById<Button>(R.id.button)
-            pickButton.setOnClickListener { pickMultipleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }
-//        }
-
-        cardDeck = root.findViewById(R.id.cardDeck);
-
-        cardDeck.adapter = adapter
-        cardDeck.layoutManager =  SwiperLayout(3)
-
-        val deleteButton = root.findViewById<ImageView>(R.id.delete_button)
-        deleteButton.setOnClickListener {
-            val action = HomeFragmentDirections.actionHomeFragmentToBinFragment((cardDeck.adapter as SwiperAdapter).deletedImages.toTypedArray())
-            findNavController().navigate(action)
+                cardDeck.addData(selectedImage)
+            }
         }
+
+        // Ecouter le bouton pour charger l'image
+        val pickButton = root.findViewById<Button>(R.id.button)
+        pickButton.setOnClickListener { pickMultipleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }
+
+        val revertButton = root.findViewById<Button>(R.id.revert)
+        revertButton.setOnClickListener { cardDeck.revertSwipedCard() }
+
+        // Use this to retrieve the current top Card Data (Uri)
+        // getCurrentData()
+
         return root;
     }
 

@@ -14,7 +14,7 @@ interface SwiperCallback {
 
     fun onCardSwipedRight(adapterPosition: Int, card: View, notify: Boolean)
 
-    fun onCardLiked(adapterPosition: Int, card: View)
+    fun onCardLiked()
 
     fun onCardDisliked(adapterPosition: Int, card: View)
 
