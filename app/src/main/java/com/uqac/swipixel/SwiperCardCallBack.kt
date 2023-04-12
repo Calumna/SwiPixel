@@ -16,4 +16,6 @@ interface SwiperCardCallBack {
 
     fun onCardSwipedLeft(card: SwiperCard)
 
+    fun onEndCardAnimation(card: SwiperCard)
+
 }

@@ -1,5 +1,8 @@
 package com.uqac.swipixel
 
+import android.animation.Animator
+import android.animation.Animator.AnimatorListener
+import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
@@ -7,19 +10,26 @@ import android.net.Uri
 import android.util.AttributeSet
 import android.util.Log
 import android.view.*
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.setMargins
-import kotlin.math.abs
 
 class SwiperCard(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : CardView(context, attrs, defStyleAttr) {
 
     var acceptButton: ImageButton
     var  rejectButton: ImageButton
-    var picture: ImageView
+    private val picture: ImageView
+
+    var pictureUri: Uri? = null
+        set(value) {
+            field = value
+            picture.setImageURI(field)
+        }
+
 
     var swiperCardCallBack: SwiperCardCallBack? = null
 
@@ -31,18 +41,28 @@ class SwiperCard(context: Context, attrs: AttributeSet? = null, defStyleAttr: In
         rejectButton = ImageButton(context)
 
         radius = 25f
-        val lp = MarginLayoutParams(
-            MarginLayoutParams.MATCH_PARENT,
-            MarginLayoutParams.MATCH_PARENT
+
+        // TODO : Je sais pas pq generateDefaultLayoutParam ne fonctionne pas
+        val lp = LayoutParams(
+            LayoutParams.MATCH_PARENT,
+            LayoutParams.MATCH_PARENT
         )
         lp.setMargins(50)
-        // Set the layout param of the Card
         layoutParams = lp
 
         createChildsIds()
         setChildrenLayoutParams()
         setImagesConstraint();
         setImagesButtonsCallback()
+    }
+
+    override fun generateDefaultLayoutParams(): LayoutParams {
+        val lp = LayoutParams(
+            LayoutParams.MATCH_PARENT,
+            LayoutParams.MATCH_PARENT
+        )
+        lp.setMargins(50)
+        return lp
     }
 
     private fun setImagesButtonsCallback() {
@@ -123,9 +143,30 @@ class SwiperCard(context: Context, attrs: AttributeSet? = null, defStyleAttr: In
         addView(layout)
     }
 
-    fun animateSwipe(from: Float, to: Float) {
-        ObjectAnimator.ofFloat(this, "translationX", to - from).apply {
+    // TODO : Clearer et rendre plus propre
+    fun animateSwipe(to: Float) {
+        val animaton = ObjectAnimator.ofFloat(this, "translationX", translationX + to).apply {
             duration = 1000
+            start()
+        }
+
+        animaton.addListener(object : AnimatorListener{
+            override fun onAnimationStart(p0: Animator) {}
+            override fun onAnimationCancel(p0: Animator) {}
+            override fun onAnimationRepeat(p0: Animator) {}
+
+            override fun onAnimationEnd(p0: Animator) {
+                swiperCardCallBack?.onEndCardAnimation(this@SwiperCard)
+            }
+
+        })
+    }
+
+    // TODO : rendre plus propre
+    fun revertAnim(from: Float){
+        this.translationY = from
+        ObjectAnimator.ofFloat(this, "translationY", 0f).apply {
+            duration = 300
             start()
         }
     }
@@ -183,3 +224,4 @@ class SwiperCard(context: Context, attrs: AttributeSet? = null, defStyleAttr: In
 
 
 }
+

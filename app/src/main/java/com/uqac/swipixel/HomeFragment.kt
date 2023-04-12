@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
-    private lateinit var cardDeck: RecyclerView
+    private lateinit var cardDeck: Swiper
 
     // variable pour afficher une photo de la galerie
     var selectedImage: List<SwiperData> = ArrayList<SwiperData>()
@@ -41,9 +41,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         // Inflate the layout for this fragment
         // setHasOptionsMenu(true)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
-        cardDeck = root.findViewById<RecyclerView>(R.id.cardDeck);
-
-        val adapter = SwiperAdapter()
+        cardDeck = root.findViewById<Swiper>(R.id.cardDeck);
         val pickMultipleMedia = registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(5)) { uris ->
             // Callback is invoked after the user selects media items or closes the
             // photo picker.
@@ -51,7 +49,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 selectedImage = uris.map {
                     SwiperData(it)
                 }
-                adapter.addData(selectedImage)
+                cardDeck.addData(selectedImage)
             }
         }
 
@@ -59,9 +57,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val pickButton = root.findViewById<Button>(R.id.button)
         pickButton.setOnClickListener { pickMultipleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }
 
+        val revertButton = root.findViewById<Button>(R.id.revert)
+        revertButton.setOnClickListener { cardDeck.revertSwipedCard() }
 
-        cardDeck.adapter = adapter
-        cardDeck.layoutManager =  SwiperLayout(3)
+        // Use this to retrieve the current top Card Data (Uri)
+        // getCurrentData()
         return root;
     }
 
