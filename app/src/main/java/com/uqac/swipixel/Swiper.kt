@@ -36,10 +36,6 @@ class Swiper @JvmOverloads constructor(
     var maxVisibleCard: Int = 4
     var cardOffset: Int = 20
 
-    init {
-        setBackgroundColor(Color.parseColor("#ffffff"))
-    }
-
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
         Log.d("SWIPER", "onLayout")
