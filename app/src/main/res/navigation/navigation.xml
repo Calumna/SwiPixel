@@ -16,8 +16,8 @@
     </fragment>
     
     <fragment
-        android:id="@+id/parametersFragment"
-        android:name="com.uqac.swipixel.parametersFragment"
+        android:id="@+id/ParametersFragment"
+        android:name="com.uqac.swipixel.ParametersFragment"
         android:label="Paramètres"
         tools:layout="@layout/fragment_parameters" />
 

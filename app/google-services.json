@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "801365896002",
+    "project_id": "swipixel-signin",
+    "storage_bucket": "swipixel-signin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:801365896002:android:9224fe286442cbc912f6db",
+        "android_client_info": {
+          "package_name": "com.uqac.swipixel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "801365896002-ddk73pg99irun5g8f6geh2ksgapqsjh6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uqac.swipixel",
+            "certificate_hash": "a5a8b6b1f1a32c3179c1d61b15d4339a776f2db3"
+          }
+        },
+        {
+          "client_id": "801365896002-3ba9ccsjckr1fiu9hn9s212pt5lcd42j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9xBU8oXhXpMxFLLpY4vbKml6E4f_pa0A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "801365896002-3ba9ccsjckr1fiu9hn9s212pt5lcd42j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
