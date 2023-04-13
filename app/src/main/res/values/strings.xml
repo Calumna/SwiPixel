@@ -35,4 +35,7 @@
     <string name="password_visibility">password_visibility</string>
     <string name="confirm_password">confirm password</string>
     <string name="Confirm_password">Confirm password</string>
+    <string name="revert">Revert</string>
+    <string name="photos_dans_la_corbeille">Photos dans la corbeille</string>
+    <string name="app_bin">app bin</string>
 </resources>

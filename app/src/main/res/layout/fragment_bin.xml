@@ -8,36 +8,36 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_width="348dp"
-        android:layout_height="564dp"
+        android:layout_width="349dp"
+        android:layout_height="543dp"
         android:layout_marginStart="1dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="92dp"
         android:layout_marginEnd="1dp"
-        android:contentDescription="app bin"
+        android:contentDescription="@string/app_bin"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
     </androidx.recyclerview.widget.RecyclerView>
 
     <Button
-        android:id="@+id/delete_button"
-        android:layout_width="355dp"
-        android:layout_height="59dp"
+        android:id="@+id/clear_bin"
+        android:layout_width="344dp"
+        android:layout_height="60dp"
         android:text="@string/vider_la_corbeille"
         app:icon="@drawable/delete"
         app:iconPadding="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
+        app:layout_constraintTop_toBottomOf="@+id/recyclerView"
+        tools:ignore="VisualLintButtonSize" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:text="Photos dans la corbeille"
+        android:text="@string/photos_dans_la_corbeille"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.248"
