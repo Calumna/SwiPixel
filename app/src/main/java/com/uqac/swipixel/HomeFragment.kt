@@ -29,7 +29,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
 
         cardDeck = root.findViewById<Swiper>(R.id.cardDeck);
-        val pickMultipleMedia = registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(5)) { uris ->
+        val pickMultipleMedia = registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(100)) { uris ->
             // Callback is invoked after the user selects media items or closes the
             // photo picker.
             if (uris.isNotEmpty()) {
