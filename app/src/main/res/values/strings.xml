@@ -35,4 +35,9 @@
     <string name="password_visibility">password_visibility</string>
     <string name="confirm_password">confirm password</string>
     <string name="Confirm_password">Confirm password</string>
+    <string name="text_pick_photo">text pick photo</string>
+    <string name="pick_photos">Pick photos</string>
+    <string name="info_button">info button</string>
+    <string name="remaining_pictures">Remaining pictures :</string>
+    <string name="_0">0</string>
 </resources>

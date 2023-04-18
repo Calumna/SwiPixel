@@ -6,6 +6,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+        <ImageButton
+            android:id="@+id/pickPhoto"
+            android:layout_width="230dp"
+            android:layout_height="250dp"
+            android:backgroundTint="#00FFFFFF"
+            android:contentDescription="@string/pick_a_photo"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="@+id/cardDeck"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cardDeck"
+            app:srcCompat="@drawable/addphoto" />
+
+        <TextView
+            android:id="@+id/textPickPhotos"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:contentDescription="@string/text_pick_photo"
+            android:text="@string/pick_photos"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="@+id/cardDeck"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pickPhoto"
+            tools:ignore="VisualLintOverlap" />
+
         <com.uqac.swipixel.Swiper
             android:id="@+id/cardDeck"
             android:layout_width="0dp"
@@ -13,8 +39,12 @@
             android:contentDescription="@string/swiper"
             app:layout_constraintBottom_toTopOf="@+id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0">
+
+        </com.uqac.swipixel.Swiper>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
@@ -24,28 +54,17 @@
             app:layout_constraintGuide_percent="0.8" />
 
 
-        <Button
-            android:id="@+id/button"
+        <ImageView
+            android:id="@+id/delete_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/pick_a_photo"
+            android:contentDescription="@string/btn_delete"
+            app:itemIconTint="?attr/colorOnBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardDeck"
-            app:layout_constraintVertical_bias="0.704" />
-
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/delete"
-                app:itemIconTint="?attr/colorOnBackground"
-                android:id="@+id/delete_button"
-                android:contentDescription="@string/btn_delete"
-                app:layout_constraintStart_toEndOf="@+id/button"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/guideline"
-                app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintStart_toEndOf="@+id/remaining_pictures"
+            app:layout_constraintTop_toTopOf="@+id/guideline"
+            app:srcCompat="@drawable/delete" />
 
         <Button
             android:id="@+id/revert"
@@ -53,21 +72,50 @@
             android:layout_height="wrap_content"
             android:text="Revert"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/button"
+            app:layout_constraintEnd_toStartOf="@+id/remaining_pictures"
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardDeck" />
+            app:layout_constraintTop_toBottomOf="@+id/cardDeck"
+            tools:ignore="HardcodedText" />
 
         <ImageButton
             android:id="@+id/info_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:backgroundTint="#00FFFFFF"
-            android:contentDescription="info button"
-            app:layout_constraintBottom_toTopOf="@+id/button"
+            android:contentDescription="@string/info_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardDeck"
-            app:srcCompat="@drawable/info_btn" />
+            app:srcCompat="@drawable/info_btn"
+            tools:ignore="RedundantDescriptionCheck" />
+
+        <TextView
+            android:id="@+id/remaining_pictures"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/remaining_pictures"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.452"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/info_button"
+            app:layout_constraintVertical_bias="0.366" />
+
+        <TextView
+            android:id="@+id/nb_rm_pics"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="22dp"
+            android:layout_marginEnd="22dp"
+            android:text="@string/_0"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/delete_button"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/remaining_pictures"
+            app:layout_constraintTop_toBottomOf="@+id/info_button"
+            app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

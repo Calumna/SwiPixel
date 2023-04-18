@@ -14,11 +14,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isEmpty
+import androidx.core.view.size
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
@@ -27,22 +30,22 @@ import java.lang.Math.floor
 import java.util.*
 import kotlin.collections.ArrayList
 
-class HomeFragment : Fragment(R.layout.fragment_home) {
+class HomeFragment : Fragment(R.layout.fragment_home), CardDeckChangeListener {
 
     private lateinit var cardDeck: Swiper
 
     // variable pour afficher une photo de la galerie
     var selectedImage: List<SwiperData> = ArrayList()
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_home, container, false)
+        val textRemainingPics : TextView = root.findViewById(R.id.nb_rm_pics)
 
         cardDeck = root.findViewById<Swiper>(R.id.cardDeck);
-        val pickMultipleMedia = registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(5)) { uris ->
+        val pickMultipleMedia = registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(100)) { uris ->
             // Callback is invoked after the user selects media items or closes the
             // photo picker.
             if (uris.isNotEmpty()) {
@@ -50,12 +53,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     SwiperData(it)
                 }
                 cardDeck.addData(selectedImage)
+                textRemainingPics.text = cardDeck.size.toString()
             }
         }
 
         // Ecouter le bouton pour charger l'image
-        val pickButton = root.findViewById<Button>(R.id.button)
-        pickButton.setOnClickListener { pickMultipleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }
+        val pickButton : ImageButton = root.findViewById(R.id.pickPhoto)
+        pickButton.setOnClickListener {
+            pickMultipleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }
 
         val revertButton = root.findViewById<Button>(R.id.revert)
         revertButton.setOnClickListener { cardDeck.revertSwipedCard() }
@@ -81,7 +86,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             findNavController().navigate(action)
         }
 
-        return root;
+        return root
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -153,5 +158,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             cursor.close()
         }
         return filePath
+    }
+
+    override fun onCardDeckChanged() {
+        // Mettre à jour la vue en conséquence
+//        val textRemainingPics : TextView = root.findViewById(R.id.nb_rm_pics)
+//        textRemainingPics.text = (cardDeck.size - cardDeck.currentIndex).toString()
     }
 }
