@@ -89,9 +89,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun showImageInfo(imageItem: SwiperData) {
-        val filePath = getFilePathFromUri(requireContext(), imageItem.image)
         // Créez une instance de ExifInterface pour lire les exifs de l'image
-        val exif = ExifInterface(filePath!!)
+        val exif = ExifInterface(imageItem.image.path!!)
 
         // Obtenez la date et l'heure de prise de vue
         val dateTime = exif.getAttribute(ExifInterface.TAG_DATETIME)
@@ -140,17 +139,5 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val minutes = floor((absoluteCoordinate - degrees) * 60)
         val seconds = (absoluteCoordinate - degrees - minutes / 60) * 3600
         return degrees + minutes / 60 + seconds / 3600
-    }
-
-    fun getFilePathFromUri(context: Context, uri: Uri): String? {
-        var filePath: String? = null
-        val cursor = context.contentResolver.query(uri, null, null, null, null)
-        cursor?.let {
-            it.moveToFirst()
-            val columnIndex = it.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
-            filePath = it.getString(columnIndex)
-            cursor.close()
-        }
-        return filePath
     }
 }
