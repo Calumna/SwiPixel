@@ -160,6 +160,4 @@ class Swiper @JvmOverloads constructor(
             recycledCard.add(card)
         }
     }
-
-
 }

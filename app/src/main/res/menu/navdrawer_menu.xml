@@ -5,8 +5,4 @@
         android:id="@+id/ParametersFragment"
         android:icon="@drawable/settings"
         android:title="@string/param_tres" />
-    <item
-        android:id="@+id/selectionFragment"
-        android:icon="@drawable/addphoto"
-        android:title="@string/s_l_ction_des_photos" />
 </menu>
