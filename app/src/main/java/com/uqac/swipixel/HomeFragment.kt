@@ -71,7 +71,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 showImageInfo(cardDeck.getCurrentData())
             }
             else{
-                Toast.makeText(context, "Pas de photo", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "No photos", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -108,8 +108,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         // Créez une boîte de dialogue pour afficher les informations de l'image
         val dialog = AlertDialog.Builder(requireContext())
-            .setTitle("Informations sur l'image")
-            .setMessage("Date et heure : $dateTime\nLieu : $location")
+            .setTitle("Image information")
+            .setMessage("Date and hours : $dateTime\nLieu : $location")
             .setPositiveButton("OK", null)
             .create()
         dialog.show()
