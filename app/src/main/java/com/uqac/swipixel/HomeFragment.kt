@@ -15,7 +15,10 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.activity.result.ActivityResultLauncher
+import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isEmpty
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -63,7 +66,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val infoButton: ImageButton = root.findViewById(R.id.info_button)
         infoButton.setOnClickListener {
             // Récupérer les infos de l'image actuellement devant
-            showImageInfo(cardDeck.getCurrentData())
+            if(!cardDeck.isEmpty()){
+                showImageInfo(cardDeck.getCurrentData())
+            }
+            else{
+                Toast.makeText(context, "Pas de photo", Toast.LENGTH_SHORT).show()
+            }
         }
 
         val deleteButton = root.findViewById<ImageView>(R.id.bin_button)
