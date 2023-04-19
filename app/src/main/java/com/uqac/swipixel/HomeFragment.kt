@@ -36,10 +36,11 @@ class HomeFragment : Fragment(R.layout.fragment_home), CardDeckChangeListener {
 
     private lateinit var cardDeck: Swiper
     private lateinit var textRemainingPics : TextView
+    private lateinit var textNbDeletedImgaes : TextView
 
     // variable pour afficher une photo de la galerie
-    var selectedImages: List<SwiperData> = ArrayList()
 
+    var selectedImages: MutableList<SwiperData> = ArrayList()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,18 +48,22 @@ class HomeFragment : Fragment(R.layout.fragment_home), CardDeckChangeListener {
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         textRemainingPics = root.findViewById(R.id.nb_rm_pics)
-        
+
         cardDeck = root.findViewById<Swiper>(R.id.cardDeck);
         val  pickMultipleMedia: ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
             // Do something with the selected URIs
+
             if (uris.isNotEmpty()) {
+                if(cardDeck.currentIndex == cardDeck.deckSize){
+                    cardDeck.clearDeck()
+                    selectedImages.clear()
+                }
                 selectedImages = uris.map {
                     SwiperData(it)
-                }
-                cardDeck.addData(selectedImages)
+                } as MutableList<SwiperData>
 
-                cardDeck.currentIndex = 0
-                textRemainingPics.text = cardDeck.size.toString()
+                cardDeck.addData(selectedImages)
+                textRemainingPics.text = cardDeck.deckSize.toString()
             }
         }
         cardDeck.listener = this
@@ -159,6 +164,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), CardDeckChangeListener {
 
     override fun onCardDeckChanged() {
         // Mettre à jour la vue en conséquence
-        textRemainingPics.text = (selectedImage.size - cardDeck.currentIndex).toString()
+        textRemainingPics.text = (selectedImages.size - cardDeck.currentIndex).toString()
+        textNbDeletedImgaes.text = cardDeck.deletedImages.size.toString()
     }
 }
