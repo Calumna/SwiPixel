@@ -18,6 +18,7 @@ class Swiper @JvmOverloads constructor(
 
     private var deck: ArrayList<SwiperData> = ArrayList()
     var deletedImages: ArrayList<SwiperData>  = ArrayList()
+    var listener: CardDeckChangeListener? = null
 
     private var isCardsCreated: Boolean = false
 
@@ -127,6 +128,7 @@ class Swiper @JvmOverloads constructor(
         // TODO : Refaire les calculs
         card.animateSwipe(width + 10f)
         currentIndex++
+        listener?.onCardDeckChanged()
     }
 
     override fun onRejectButtonClicked(card: SwiperCard) {
@@ -134,6 +136,7 @@ class Swiper @JvmOverloads constructor(
         card.animateSwipe(x - card.width - 60f)
         deletedImages.add(deck[deck.size-1-currentIndex])
         currentIndex++
+        listener?.onCardDeckChanged()
     }
 
     override fun onCardSwipedRight(card: SwiperCard) {
@@ -141,6 +144,7 @@ class Swiper @JvmOverloads constructor(
             card.animateSwipe(width + 10f)
             currentIndex ++
         }
+        listener?.onCardDeckChanged()
     }
 
     override fun onCardSwipedLeft(card: SwiperCard) {
@@ -149,6 +153,7 @@ class Swiper @JvmOverloads constructor(
             deletedImages.add(deck[deck.size-1-currentIndex])
             currentIndex++
         }
+        listener?.onCardDeckChanged()
     }
 
     // TODO : Si une carte termine son animation et que la suivante effectue la sienne (verifier si le requestLayout fais pas le bordel)

@@ -33,6 +33,7 @@ import kotlin.collections.ArrayList
 class HomeFragment : Fragment(R.layout.fragment_home), CardDeckChangeListener {
 
     private lateinit var cardDeck: Swiper
+    private lateinit var textRemainingPics : TextView
 
     // variable pour afficher une photo de la galerie
     var selectedImage: List<SwiperData> = ArrayList()
@@ -42,9 +43,9 @@ class HomeFragment : Fragment(R.layout.fragment_home), CardDeckChangeListener {
     ): View? {
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_home, container, false)
-        val textRemainingPics : TextView = root.findViewById(R.id.nb_rm_pics)
+        textRemainingPics = root.findViewById(R.id.nb_rm_pics)
 
-        cardDeck = root.findViewById<Swiper>(R.id.cardDeck);
+        cardDeck = root.findViewById<Swiper>(R.id.cardDeck)
         val pickMultipleMedia = registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(100)) { uris ->
             // Callback is invoked after the user selects media items or closes the
             // photo picker.
@@ -53,9 +54,11 @@ class HomeFragment : Fragment(R.layout.fragment_home), CardDeckChangeListener {
                     SwiperData(it)
                 }
                 cardDeck.addData(selectedImage)
+                cardDeck.currentIndex = 0
                 textRemainingPics.text = cardDeck.size.toString()
             }
         }
+        cardDeck.listener = this
 
         // Ecouter le bouton pour charger l'image
         val pickButton : ImageButton = root.findViewById(R.id.pickPhoto)
@@ -162,7 +165,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), CardDeckChangeListener {
 
     override fun onCardDeckChanged() {
         // Mettre à jour la vue en conséquence
-//        val textRemainingPics : TextView = root.findViewById(R.id.nb_rm_pics)
-//        textRemainingPics.text = (cardDeck.size - cardDeck.currentIndex).toString()
+        textRemainingPics.text = (selectedImage.size - cardDeck.currentIndex).toString()
     }
 }
