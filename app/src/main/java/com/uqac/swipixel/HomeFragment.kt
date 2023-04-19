@@ -1,12 +1,17 @@
 package com.uqac.swipixel
 
 import android.app.AlertDialog
+import android.content.ContentUris
 import android.content.Context
+import android.database.Cursor
 import android.location.Geocoder
 import android.location.Location
 import android.media.ExifInterface
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -20,6 +25,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toFile
 import androidx.core.view.isEmpty
 import androidx.core.view.size
 import androidx.fragment.app.Fragment
@@ -48,6 +54,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), CardDeckChangeListener {
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         textRemainingPics = root.findViewById(R.id.nb_rm_pics)
+        textNbDeletedImgaes = root.findViewById(R.id.nb_deleted_images)
 
         cardDeck = root.findViewById<Swiper>(R.id.cardDeck);
         val  pickMultipleMedia: ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
@@ -83,14 +90,15 @@ class HomeFragment : Fragment(R.layout.fragment_home), CardDeckChangeListener {
         infoButton.setOnClickListener {
             // Récupérer les infos de l'image actuellement devant
             if(!cardDeck.isEmpty()){
-                showImageInfo(cardDeck.getCurrentData())
+                //showImageInfo(cardDeck.getCurrentData())
+                Toast.makeText(context, "Feature doesn't work", Toast.LENGTH_SHORT).show()
             }
             else{
                 Toast.makeText(context, "No photo", Toast.LENGTH_SHORT).show()
             }
         }
 
-        val deleteButton : ImageButton = root.findViewById(R.id.delete_button)
+        val deleteButton = root.findViewById<ImageView>(R.id.delete_button)
         deleteButton.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeFragmentToBinFragment(cardDeck.deletedImages.toTypedArray())
             findNavController().navigate(action)
@@ -105,7 +113,8 @@ class HomeFragment : Fragment(R.layout.fragment_home), CardDeckChangeListener {
     }
 
     private fun showImageInfo(imageItem: SwiperData) {
-        val filePath = getFilePathFromUri(requireContext(), imageItem.image)
+
+        val filePath = getFilePathFromUri(requireContext(), getCorrectUri(imageItem.image))
         // Créez une instance de ExifInterface pour lire les exifs de l'image
         val exif = ExifInterface(filePath!!)
 
@@ -113,7 +122,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), CardDeckChangeListener {
         val dateTime = exif.getAttribute(ExifInterface.TAG_DATETIME)
 
         // Convertissez la latitude et la longitude en une ville
-        val location = getLocationFromExif(filePath)
+        val location = getLocationFromExif(imageItem.image.toString())
         //val location = exif.getAttribute(ExifInterface.TAG_GPS_AREA_INFORMATION)
 
         // Créez une boîte de dialogue pour afficher les informations de l'image
@@ -160,6 +169,13 @@ class HomeFragment : Fragment(R.layout.fragment_home), CardDeckChangeListener {
             cursor.close()
         }
         return filePath
+    }
+
+    fun getCorrectUri(uri : Uri) : Uri {
+        val mediaUri: Uri = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
+        val idString = uri.lastPathSegment
+        val id: Long? = idString?.substringAfter("image:")?.toLongOrNull()
+        return ContentUris.withAppendedId(mediaUri, id!!)
     }
 
     override fun onCardDeckChanged() {
