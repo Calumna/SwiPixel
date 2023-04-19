@@ -9,9 +9,9 @@ import android.location.Location
 import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
-import android.os.Bundle
 import android.os.Environment
 import android.provider.DocumentsContract
+import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -47,6 +47,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), CardDeckChangeListener {
     // variable pour afficher une photo de la galerie
 
     var selectedImages: MutableList<SwiperData> = ArrayList()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -122,7 +123,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), CardDeckChangeListener {
         val dateTime = exif.getAttribute(ExifInterface.TAG_DATETIME)
 
         // Convertissez la latitude et la longitude en une ville
-        val location = getLocationFromExif(imageItem.image.toString())
+        val location = getLocationFromExif(filePath)
         //val location = exif.getAttribute(ExifInterface.TAG_GPS_AREA_INFORMATION)
 
         // Créez une boîte de dialogue pour afficher les informations de l'image
