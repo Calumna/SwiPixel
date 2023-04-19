@@ -3,6 +3,7 @@ package com.uqac.swipixel
 import android.app.AlertDialog
 import android.content.Context
 import android.location.Geocoder
+import android.location.Location
 import android.media.ExifInterface
 import android.net.Uri
 import android.os.Bundle
@@ -106,52 +107,44 @@ class HomeFragment : Fragment(R.layout.fragment_home), CardDeckChangeListener {
         // Obtenez la date et l'heure de prise de vue
         val dateTime = exif.getAttribute(ExifInterface.TAG_DATETIME)
 
-        // Obtenez la latitude et la longitude
-        val latitude = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE)
-        val longitude = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE)
-        val latitudeRef = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF)
-        val longitudeRef = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF)
-
         // Convertissez la latitude et la longitude en une ville
-        val location = getLocationFromExif(latitude, longitude, latitudeRef, longitudeRef)
+        val location = getLocationFromExif(filePath)
+        //val location = exif.getAttribute(ExifInterface.TAG_GPS_AREA_INFORMATION)
 
         // Créez une boîte de dialogue pour afficher les informations de l'image
         val dialog = AlertDialog.Builder(requireContext())
             .setTitle("Image information")
-            .setMessage("Date and hours : $dateTime\nLieu : $location")
+            .setMessage("Date and hours : $dateTime\nPlace : $location\n")
             .setPositiveButton("OK", null)
             .create()
         dialog.show()
     }
 
-    private fun getLocationFromExif(
-        latitude: String?,
-        longitude: String?,
-        latitudeRef: String?,
-        longitudeRef: String?
-    ): String {
-        if (latitude != null && longitude != null && latitudeRef != null && longitudeRef != null) {
-            val lat = convertToDegree(latitude.toDouble())
-            val lon = convertToDegree(longitude.toDouble())
 
-            val geocoder = Geocoder(requireContext(), Locale.getDefault())
-            val addresses = geocoder.getFromLocation(lat, lon, 1)
+    fun getLocationFromExif(filePath: String): String? {
+        try {
+            val exif = ExifInterface(filePath)
+            val latLong = FloatArray(2)
+            val hasLatLong = exif.getLatLong(latLong)
+            if (hasLatLong) {
+                val location = Location("")
+                location.latitude = latLong[0].toDouble()
+                location.longitude = latLong[1].toDouble()
 
-            if (addresses!!.isNotEmpty()) {
-                return addresses[0].locality ?: addresses[0].adminArea ?: ""
+
+                val geocoder = Geocoder(requireContext(), Locale.getDefault())
+                val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+                if (addresses!!.size > 0) {
+                    val address = addresses[0]
+                    return address.locality
+                }
+
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-        return ""
+        return "No place found"
     }
-
-    private fun convertToDegree(coordinate: Double): Double {
-        val absoluteCoordinate = abs(coordinate)
-        val degrees = floor(absoluteCoordinate)
-        val minutes = floor((absoluteCoordinate - degrees) * 60)
-        val seconds = (absoluteCoordinate - degrees - minutes / 60) * 3600
-        return degrees + minutes / 60 + seconds / 3600
-    }
-
     fun getFilePathFromUri(context: Context, uri: Uri): String? {
         var filePath: String? = null
         val cursor = context.contentResolver.query(uri, null, null, null, null)
