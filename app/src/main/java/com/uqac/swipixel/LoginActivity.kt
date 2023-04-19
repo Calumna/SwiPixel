@@ -145,29 +145,6 @@ class LoginActivity : AppCompatActivity() {
             signIn()
         }
     }
-/*    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == RC_SIGN_IN) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
-                val account = task.getResult(ApiException::class.java)
-                // L'authentification a réussi, traiter les informations de connexion
-                firebaseAuthWithGoogle(account!!.idToken!!)
-            } catch (e: ApiException) {
-                // L'authentification a échoué, afficher un message d'erreur
-                Log.w(TAG, "Google sign in failed", e)
-            }
-        }else {
-            Toast.makeText(
-                this@LoginActivity,
-                "Connexion failed",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-
-    }*/
-
     private fun signIn() {
         val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
@@ -175,20 +152,18 @@ class LoginActivity : AppCompatActivity() {
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            val task = data?.let { Auth.GoogleSignInApi.getSignInResultFromIntent(it) }
+        if (requestCode == RC_SIGN_IN && resultCode == RESULT_OK) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 // Check if the task is null
-                if (task == null || !task.isSuccess) {
-                    // Handle the error
-                    Log.w(TAG, "Google sign in failed: ${task?.status}")
+                if (!task.isComplete || task.isSuccessful.not()) {
+                    Log.w(TAG, "Google sign in failed: ${task?.exception}")
                     Toast.makeText(this, "Google sign in failed", Toast.LENGTH_SHORT).show()
                     return
                 }
 
                 // Google Sign In was successful, authenticate with Firebase
-                val account = task.signInAccount
+                val account = task.result
                 if (account != null) {
                     firebaseAuthWithGoogle(account)
                     // Proceed to main activity
@@ -201,6 +176,9 @@ class LoginActivity : AppCompatActivity() {
                 Log.w(TAG, "Google sign in failed", e)
                 Toast.makeText(this, "Google sign in failed", Toast.LENGTH_SHORT).show()
             }
+        } else {
+            Log.w(TAG, "Google sign in failed, result code: $resultCode")
+            Toast.makeText(this, "Google sign in failed", Toast.LENGTH_SHORT).show()
         }
     }
 
