@@ -10,6 +10,8 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class ParametersFragment : Fragment() {
     override fun onCreateView(
@@ -22,7 +24,6 @@ class ParametersFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
 
         view.findViewById<Button>(R.id.btn_logout).setOnClickListener {
             Log.d("ParametersFragment", "Button clicked")
