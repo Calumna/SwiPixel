@@ -16,11 +16,12 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
-import com.google.android.material.textfield.TextInputEditText
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -38,8 +39,9 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var googleSignInLauncher: ActivityResultLauncher<Intent>
-
-
+    companion object {
+        private const val RC_SIGN_IN = 123
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -142,8 +144,31 @@ class LoginActivity : AppCompatActivity() {
         btSignIn.setOnClickListener {
             val intent = googleSignInClient.signInIntent
             googleSignInLauncher.launch(intent)
+            //startActivityForResult(intent, RC_SIGN_IN)
         }
     }
+/*    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                // L'authentification a réussi, traiter les informations de connexion
+                firebaseAuthWithGoogle(account!!.idToken!!)
+            } catch (e: ApiException) {
+                // L'authentification a échoué, afficher un message d'erreur
+                Log.w(TAG, "Google sign in failed", e)
+            }
+        }else {
+            Toast.makeText(
+                this@LoginActivity,
+                "Connexion failed",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+    }*/
 
     override fun onStart() {
         super.onStart()
@@ -152,9 +177,9 @@ class LoginActivity : AppCompatActivity() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == Activity.RESULT_OK) {
                     val intent = result.data
-                    val task = GoogleSignIn.getSignedInAccountFromIntent(intent)
+                    val task : Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(intent)
                     try {
-                        val account = task.getResult(ApiException::class.java)
+                        val account : GoogleSignInAccount = task.getResult(ApiException::class.java)
                         firebaseAuthWithGoogle(account!!.idToken!!)
                     } catch (e: ApiException) {
                         Log.w(TAG, "Google sign in failed", e)
@@ -180,6 +205,7 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
     }
+
 }
 
 
