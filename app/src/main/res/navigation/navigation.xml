@@ -30,7 +30,7 @@
     <fragment
             android:id="@+id/binFragment"
             android:name="com.uqac.swipixel.BinFragment"
-            android:label="Corbeille" >
+            android:label="@string/bin" >
         <argument
                 android:name="deletedImages"
                 app:argType="com.uqac.swipixel.SwiperData[]"/>

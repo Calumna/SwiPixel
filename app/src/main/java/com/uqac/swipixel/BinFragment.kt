@@ -40,7 +40,6 @@ class BinFragment : Fragment(R.layout.fragment_bin){
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_bin, container, false)
         deletedImages = retreiveDeletedImages()
-        Log.d("Bin","deletedImages : " + deletedImages.size.toString())
         // Define the RecyclerView
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerView)
 
@@ -57,16 +56,16 @@ class BinFragment : Fragment(R.layout.fragment_bin){
         // Add OnClickListener to delete button
         deleteButton.setOnClickListener {
             val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle("Vider la corbeille")
-            builder.setMessage("Êtes-vous sûr de vouloir vider la corbeille ?")
+            builder.setTitle(R.string.vider_la_corbeille)
+            builder.setMessage(R.string.confirmation_empty_bin)
 
             // Ajouter le bouton "Oui"
             // Supprimer les images de la corbeille et de l'appareil
-            builder.setPositiveButton("Oui") { dialog, which ->
+            builder.setPositiveButton(R.string.yes) { dialog, which ->
                 clearBin()
             }
             // Ajouter le bouton "Non"
-            builder.setNegativeButton("Non") { dialog, which ->
+            builder.setNegativeButton(R.string.no) { dialog, which ->
                 // Ne rien faire
             }
 
