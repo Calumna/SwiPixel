@@ -145,6 +145,28 @@ class LoginActivity : AppCompatActivity() {
             signIn()
         }
     }
+/*    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                // L'authentification a réussi, traiter les informations de connexion
+                firebaseAuthWithGoogle(account!!.idToken!!)
+            } catch (e: ApiException) {
+                // L'authentification a échoué, afficher un message d'erreur
+                Log.w(TAG, "Google sign in failed", e)
+            }
+        }else {
+            Toast.makeText(
+                this@LoginActivity,
+                "Connexion failed",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+    }*/
 
     private fun signIn() {
         val signInIntent = googleSignInClient.signInIntent
