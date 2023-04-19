@@ -116,6 +116,7 @@ class Swiper @JvmOverloads constructor(
             currentIndex++
         } else if (card.x + (card.width/2) < x ){
             card.animateSwipe(x - card.width - 60f)
+            deletedImages.add(deck[deck.size-1-currentIndex])
             currentIndex++
         }
         else {

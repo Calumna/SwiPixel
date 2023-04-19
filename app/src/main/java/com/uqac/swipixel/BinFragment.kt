@@ -1,12 +1,20 @@
 package com.uqac.swipixel
 
 import android.app.AlertDialog
+import android.app.RecoverableSecurityException
+import android.content.ContentUris
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -19,11 +27,20 @@ class BinFragment : Fragment(R.layout.fragment_bin){
     private val args: BinFragmentArgs by navArgs()
 
     // Liste d'images dans la corbeille
-    var deleteImages: List<SwiperData> = ArrayList<SwiperData>()
+    var deletedImages: MutableList<SwiperData> = ArrayList()
 
+    private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
+    private lateinit var intentSenderLauncher: ActivityResultLauncher<IntentSenderRequest>
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        intentSenderLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {}
+    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_bin, container, false)
-        deleteImages = getDeletedImages()
+        deletedImages = retreiveDeletedImages()
+        Log.d("Bin","deletedImages : " + deletedImages.size.toString())
         // Define the RecyclerView
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerView)
 
@@ -31,7 +48,8 @@ class BinFragment : Fragment(R.layout.fragment_bin){
         recyclerView.layoutManager = GridLayoutManager(activity, 2)
 
         // Set the RecyclerView's Adapter
-        bin = RecycleBinAdaptater(deleteImages)
+        bin = RecycleBinAdaptater(deletedImages)
+        recyclerView.adapter = bin
 
         // Set button to clearBin
         val deleteButton: Button = view.findViewById(R.id.clear_bin)
@@ -60,28 +78,54 @@ class BinFragment : Fragment(R.layout.fragment_bin){
         return view
     }
 
-    private fun getDeletedImages(): List<SwiperData> {
-        // Ajoutez chaque image à la liste imageItemList
+    private fun retreiveDeletedImages(): MutableList<SwiperData> {
         return args.deletedImages.toMutableList()
     }
 
     private fun clearBin() {
-        // Supprimez les images de la corbeille
-//        deleteImages = getDeletedImages()
-        //deleteImages.clear()
+        // Supprimer les images de l'appareil de l'utilisateur
+        val uris = deletedImages.map {
+            val mediaUri: Uri = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
+            val idString: String = it.image.lastPathSegment ?: return
+            val id: Long = idString.substringAfter("image:").toLongOrNull() ?: return
+            ContentUris.withAppendedId(mediaUri, id)
+        }
+        for (uri in uris) {
+            deletePhoto(uri)
+        }
+        val size = deletedImages.size
+        deletedImages.clear()
+        bin.notifyItemRangeRemoved(0,size)
+    }
 
-        // Supprimez les images de l'appareil de l'utilisateur
-//        for (image in args.deletedImages) {
-//            val file = File(image.imagePath)
-//            if (file.exists()) {
-//                file.delete()
-//            }
-//        }
-        // Mettez à jour le RecyclerView
-        bin.notifyDataSetChanged()
-
-        //toast et retour au fragment home
-        Toast.makeText(context, "La corbeille a été vidé", Toast.LENGTH_SHORT).show()
+    private fun deletePhoto (uri: Uri) {
+        val contentResolver = context?.contentResolver
+        try {
+            contentResolver?.delete(uri, null, null)
+        } catch (e: SecurityException) {
+            val intentSender = when {
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.R -> {
+                    if (contentResolver != null) {
+                        MediaStore.createDeleteRequest(
+                            contentResolver,
+                            listOf(uri)
+                        ).intentSender
+                    } else {
+                        null
+                    }
+                }
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> {
+                    val recoverableSecurityException = e as? RecoverableSecurityException
+                    recoverableSecurityException?.userAction?.actionIntent?.intentSender
+                }
+                else -> null
+            }
+            intentSender?.let { sender ->
+                intentSenderLauncher.launch(
+                    IntentSenderRequest.Builder(sender).build()
+                )
+            }
+        }
     }
 
 }

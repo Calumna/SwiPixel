@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
-import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -19,7 +19,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var cardDeck: Swiper
 
     // variable pour afficher une photo de la galerie
-    var selectedImage: List<SwiperData> = ArrayList()
+    var selectedImages: List<SwiperData> = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,26 +29,23 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
 
         cardDeck = root.findViewById<Swiper>(R.id.cardDeck);
-        val pickMultipleMedia = registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(100)) { uris ->
-            // Callback is invoked after the user selects media items or closes the
-            // photo picker.
+
+        val  pickMultipleMedia: ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
+            // Do something with the selected URIs
             if (uris.isNotEmpty()) {
-                selectedImage = uris.map {
+                selectedImages = uris.map {
                     SwiperData(it)
                 }
-                cardDeck.addData(selectedImage)
+                cardDeck.addData(selectedImages)
             }
         }
 
         // Ecouter le bouton pour charger l'image
         val pickButton = root.findViewById<Button>(R.id.button)
-        pickButton.setOnClickListener { pickMultipleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }
+        pickButton.setOnClickListener {  pickMultipleMedia.launch("image/*") }
 
         val revertButton = root.findViewById<Button>(R.id.revert)
         revertButton.setOnClickListener { cardDeck.revertSwipedCard() }
-
-        // Use this to retrieve the current top Card Data (Uri)
-        // getCurrentData()
 
         val deleteButton = root.findViewById<ImageView>(R.id.bin_button)
         deleteButton.setOnClickListener {
@@ -63,5 +60,4 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         return NavigationUI.onNavDestinationSelected(item, requireView().findNavController())
                 || super.onOptionsItemSelected(item)
     }
-
 }
