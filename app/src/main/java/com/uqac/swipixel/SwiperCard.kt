@@ -79,11 +79,11 @@ class SwiperCard(context: Context, attrs: AttributeSet? = null, defStyleAttr: In
         val pictureLayoutParams = LayoutParams(0,0)
         picture.layoutParams = pictureLayoutParams
 
-        val acceptButtonLayoutParams = LayoutParams(150 , 150)
+        val acceptButtonLayoutParams = LayoutParams(200 , 200)
         acceptButton.scaleType = ImageView.ScaleType.FIT_CENTER
         acceptButton.layoutParams = acceptButtonLayoutParams
 
-        val rejectButtonLayoutParams = LayoutParams(150, 150)
+        val rejectButtonLayoutParams = LayoutParams(200, 200)
         rejectButton.scaleType = ImageView.ScaleType.FIT_CENTER
         rejectButton.layoutParams = rejectButtonLayoutParams
 

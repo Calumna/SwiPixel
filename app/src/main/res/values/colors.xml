@@ -12,4 +12,5 @@
     <color name="almost_black">#FF050517</color>
     <color name="red">#FFFF0000</color>
     <color name="yellow">#FFFFFF00</color>
+    <color name="dark_red">#C91212</color>
 </resources>
