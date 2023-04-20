@@ -152,8 +152,12 @@ class Swiper @JvmOverloads constructor(
 
     private fun createCard() : SwiperCard{
         val card = SwiperCard(context)
-        card.acceptButton.setImageResource(R.drawable.round_favorite_24)
-        card.rejectButton.setImageResource(R.drawable.round_close_24)
+        card.acceptButton.setImageResource(R.drawable.favorite)
+        card.acceptButton.setBackgroundResource(android.R.color.transparent)
+
+        card.rejectButton.setImageResource(R.drawable.cancel)
+        card.rejectButton.setBackgroundResource(android.R.color.transparent)
+
         card.swiperCardCallBack = this
         return card
     }

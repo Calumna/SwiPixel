@@ -42,6 +42,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        firebaseAuth = FirebaseAuth.getInstance()
 
         val user = Firebase.auth.currentUser
         if (user != null) {
@@ -155,15 +156,18 @@ class LoginActivity : AppCompatActivity() {
                     try {
                         val account = task.getResult(ApiException::class.java)
                         firebaseAuthWithGoogle(account!!.idToken!!)
+
                     } catch (e: ApiException) {
                         Log.w(TAG, "Google sign in failed", e)
                     }
                 }
+                Toast.makeText(baseContext, "Authentication failed.", Toast.LENGTH_SHORT).show()
             }
     }
 
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
+        Toast.makeText(baseContext, "Authentication", Toast.LENGTH_SHORT).show()
         firebaseAuth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
@@ -180,7 +184,3 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 }
-
-
-
-

@@ -40,4 +40,9 @@
     <string name="confirmation_empty_bin">Are you sure you want to empty the bin and delete these photos ?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="text_pick_photo">text pick photo</string>
+    <string name="pick_photos">Pick photos</string>
+    <string name="info_button">info button</string>
+    <string name="remaining_pictures">Remaining pictures :</string>
+    <string name="_0">0</string>
 </resources>
