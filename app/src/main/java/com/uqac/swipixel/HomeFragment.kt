@@ -45,11 +45,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         pickButton.setOnClickListener {  pickMultipleMedia.launch("image/*") }
 
         val revertButton = root.findViewById<Button>(R.id.revert)
-        revertButton.setOnClickListener { cardDeck.revertSwipedCard() }
+        revertButton.setOnClickListener { cardDeck.backwardPreviousCard() }
 
         val deleteButton = root.findViewById<ImageView>(R.id.bin_button)
         deleteButton.setOnClickListener {
-            val action = HomeFragmentDirections.actionHomeFragmentToBinFragment(cardDeck.deletedImages.toTypedArray())
+            val action = HomeFragmentDirections.actionHomeFragmentToBinFragment(cardDeck.getAllFlaggedData(Swiper.REJECTED).toTypedArray())
             findNavController().navigate(action)
         }
 

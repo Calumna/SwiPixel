@@ -17,11 +17,13 @@ import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.setMargins
+import kotlin.math.abs
 
 class SwiperCard(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : CardView(context, attrs, defStyleAttr) {
 
     var acceptButton: ImageButton
     var  rejectButton: ImageButton
+
     private val picture: ImageView
 
     var pictureUri: Uri? = null
@@ -34,6 +36,7 @@ class SwiperCard(context: Context, attrs: AttributeSet? = null, defStyleAttr: In
     var swiperCardCallBack: SwiperCardCallBack? = null
 
     private var velocityTracker: VelocityTracker? = null
+    private var initialTouchX: Float = 0f
 
     init {
         picture = ImageView(context)
@@ -54,6 +57,7 @@ class SwiperCard(context: Context, attrs: AttributeSet? = null, defStyleAttr: In
         setChildrenLayoutParams()
         setImagesConstraint();
         setImagesButtonsCallback()
+
     }
 
     override fun generateDefaultLayoutParams(): LayoutParams {
@@ -67,11 +71,13 @@ class SwiperCard(context: Context, attrs: AttributeSet? = null, defStyleAttr: In
 
     private fun setImagesButtonsCallback() {
         acceptButton.setOnClickListener {
-            swiperCardCallBack?.onAcceptButtonClicked(this)
+            if (isEnabled)
+                swiperCardCallBack?.onAcceptButtonClicked(this)
         }
 
         rejectButton.setOnClickListener {
-            swiperCardCallBack?.onRejectButtonClicked(this)
+            if(isEnabled)
+                swiperCardCallBack?.onRejectButtonClicked(this)
         }
     }
 
@@ -143,64 +149,48 @@ class SwiperCard(context: Context, attrs: AttributeSet? = null, defStyleAttr: In
         addView(layout)
     }
 
-    // TODO : Clearer et rendre plus propre
-    fun animateSwipe(to: Float) {
-        val animaton = ObjectAnimator.ofFloat(this, "translationX", translationX + to).apply {
-            duration = 1000
-            start()
-        }
+//    // TODO : Clearer et rendre plus propre
+//    fun animateSwipe(to: Float) {
+//        val animaton = ObjectAnimator.ofFloat(this, "translationX", translationX + to).apply {
+//            duration = 1000
+//            start()
+//        }
+//
+//        animaton.addListener(object : AnimatorListener{
+//            override fun onAnimationStart(p0: Animator) {}
+//            override fun onAnimationCancel(p0: Animator) {}
+//            override fun onAnimationRepeat(p0: Animator) {}
+//
+//            override fun onAnimationEnd(p0: Animator) {
+//                swiperCardCallBack?.onEndCardAnimation(this@SwiperCard)
+//            }
+//
+//        })
+//    }
 
-        animaton.addListener(object : AnimatorListener{
-            override fun onAnimationStart(p0: Animator) {}
-            override fun onAnimationCancel(p0: Animator) {}
-            override fun onAnimationRepeat(p0: Animator) {}
-
-            override fun onAnimationEnd(p0: Animator) {
-                swiperCardCallBack?.onEndCardAnimation(this@SwiperCard)
-            }
-
-        })
-    }
-
-    // TODO : rendre plus propre
-    fun revertAnim(from: Float){
-        this.translationY = from
-        ObjectAnimator.ofFloat(this, "translationY", 0f).apply {
-            duration = 300
-            start()
-        }
-    }
+//    // TODO : rendre plus propre
+//    fun revertAnim(from: Float){
+//        this.translationY = from
+//        ObjectAnimator.ofFloat(this, "translationY", 0f).apply {
+//            duration = 300
+//            start()
+//        }
+//    }
 
     //fun animateSwipeLeft(from: Float, to: Float)
 
-    private val cardGestureListener = object : GestureDetector.SimpleOnGestureListener() {
-        // TODO : A modifier pour que ce soit plus propre
-        override fun onFling(
-            e1: MotionEvent,
-            e2: MotionEvent,
-            velocityX: Float,
-            velocityY: Float
-        ): Boolean {
-            if (e1.x > e2.x ) {
-                swiperCardCallBack?.onCardSwipedLeft(this@SwiperCard)
-                Log.d("val", "SwipedLeft")
-                return true
-            } else if (e1.x < e2.x) {
-                swiperCardCallBack?.onCardSwipedRight(this@SwiperCard)
-                Log.d("val", "SwipedRight")
-                return true
-            }
-            return false
-        }
-    }
-
     override fun onTouchEvent(e: MotionEvent): Boolean {
+        if(!isEnabled)
+            return false
         when (e.actionMasked) {
             // Le doigt touche l'ecran
             MotionEvent.ACTION_DOWN -> {
                 velocityTracker?.clear()
                 velocityTracker = velocityTracker ?: VelocityTracker.obtain()
-                swiperCardCallBack?.onCardActionDown(this)
+
+                initialTouchX = e.getX(e.getPointerId(e.actionIndex))
+
+                swiperCardCallBack?.onCardStartedSwiping(this)
             }
 
             MotionEvent.ACTION_MOVE -> {
@@ -208,20 +198,31 @@ class SwiperCard(context: Context, attrs: AttributeSet? = null, defStyleAttr: In
                     val pointerId = e.getPointerId(e.actionIndex)
                     it.addMovement(e)
                     it.computeCurrentVelocity(50)
-                    swiperCardCallBack?.onCardActionMove(this, it.getXVelocity(pointerId))
+
+                    // vecteur representant le mouvement du doit sur l'horizontal
+                    val dx = e.getX(pointerId) - initialTouchX
+
+                    if(dx < 0){
+                        swiperCardCallBack?.onCardSwipingRight(this, dx, abs(it.getXVelocity(pointerId)) )
+                    } else {
+                        swiperCardCallBack?.onCardSwipingLeft(this, dx, abs(it.getXVelocity(pointerId)))
+                    }
                 }
             }
 
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 velocityTracker?.recycle()
                 velocityTracker = null
-                swiperCardCallBack?.onCardActionUp(this)
+                val dx = e.getX(e.getPointerId(e.actionIndex)) - initialTouchX
+                if(dx < 0 ){
+                    swiperCardCallBack?.onCardSwipedRight(this)
+                } else{
+                    swiperCardCallBack?.onCardSwipedLeft(this)
+                }
             }
             else -> super.onTouchEvent(e)
         }
         return true
     }
-
-
 }
 

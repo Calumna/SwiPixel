@@ -61,16 +61,6 @@ class LoginActivity : AppCompatActivity() {
         val btnLogin = findViewById<Button>(R.id.btn_login)
         etLoginEmail = findViewById(R.id.et_login_email)
 
-        val passwordToggle = findViewById<TextInputEditText>(R.id.et_login_password)
-        passwordToggle.setOnClickListener {
-            isPasswordVisible = !isPasswordVisible
-            if (isPasswordVisible) {
-                passwordToggle.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-            } else {
-                passwordToggle.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-            }
-        }
-
 
         val passwordToggle = etLoginPassword
         passwordToggle.setOnClickListener {

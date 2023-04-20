@@ -1,11 +1,15 @@
 package com.uqac.swipixel
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
 import android.view.Gravity
-import android.view.MotionEvent
 import android.widget.FrameLayout
+import androidx.core.animation.doOnEnd
+import androidx.core.animation.doOnStart
 
 class Swiper @JvmOverloads constructor(
     context: Context,
@@ -15,13 +19,11 @@ class Swiper @JvmOverloads constructor(
 
     private var activesCards: ArrayList<SwiperCard> = ArrayList()
     private var recycledCard: ArrayList<SwiperCard> = ArrayList()
+    private var dyingCards: Int = 0
 
-    private var deck: ArrayList<SwiperData> = ArrayList()
-    var deletedImages: ArrayList<SwiperData>  = ArrayList()
-
-    private var isCardsCreated: Boolean = false
-
-    //private val adapter = ArrayAdapter<SwiperData>(context, 0)
+    private var deck: ArrayList<SwipedData> = ArrayList()
+    private val animatorMap: HashMap<SwiperCard, Animator> = HashMap()
+    // var deletedImages: ArrayList<SwiperData>  = ArrayList()
 
     var currentIndex: Int = 0
     var maxLoadedCard: Int = 10
@@ -30,11 +32,9 @@ class Swiper @JvmOverloads constructor(
     var maxVisibleCard: Int = 4
     var cardOffset: Int = 20
 
-    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        super.onLayout(changed, left, top, right, bottom)
-        Log.d("SWIPER", "onLayout")
-    }
-
+    /**
+     * Génération de paramatres par défaut
+     */
     override fun generateDefaultLayoutParams(): LayoutParams {
         val lp =  LayoutParams(
             LayoutParams.MATCH_PARENT,
@@ -44,13 +44,105 @@ class Swiper @JvmOverloads constructor(
         return lp
     }
 
-    private fun bindCard(card: SwiperCard, data: SwiperData){
-        card.translationX = 0f
-        card.pictureUri = data.image
+    /**
+     * Méthodes publiques
+     */
+
+    fun addData(swiperData: SwiperData){
+        deck.add(SwipedData(swiperData, UNDEFINED))
+        checkLoadedCard()
     }
 
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        return super.onTouchEvent(event)
+    fun addData(swiperDatas: List<SwiperData>){
+        deck.addAll(swiperDatas.map {
+            SwipedData(it, UNDEFINED)
+        })
+        checkLoadedCard()
+    }
+    fun getCurrentData(): SwiperData = deck[currentIndex].data
+
+    fun getAllFlaggedData(flag: Int = -1): List<SwiperData> {
+        return when(flag){
+            LIKED, REJECTED -> {
+                deck.subList(0, currentIndex).filter { it.swipe == flag }.map { it.data }
+            }
+            UNDEFINED -> {
+                deck.subList(currentIndex, deck.size).map { it.data }
+            }
+
+            else -> deck.map { it.data }
+        }
+    }
+
+    fun swipeRightCurrentCard(){
+        startSlideAnimator(activesCards[dyingCards], right + 10f)
+    }
+
+    fun swipeLeftCurrentCard(){
+        startSlideAnimator(activesCards[dyingCards], -(right + 10f))
+    }
+
+    fun backwardPreviousCard(){
+        if(currentIndex > 0) {
+            Log.d("SWIPER", "Backward a card")
+            currentIndex--
+            if (dyingCards > 0) {
+                Log.d("SWIPER", "\t--> Use of dying Card")
+                animatorMap[activesCards[dyingCards - 1]]?.let {
+                    it.cancel()
+                    startComeBackAnimator(activesCards[dyingCards - 1])
+                    dyingCards--
+                }
+
+            } else {
+                val card = if (recycledCard.size > 0) {
+                    Log.d("SWIPER", "\t--> Use of Recycled Card")
+                    recycledCard.removeFirst().let {
+                        addView(it, childCount)
+                        it
+                    }
+                }
+                else {
+                    Log.d("SWIPER", "\t--> Use of last Active Card")
+                    activesCards.removeLast().let {
+                        it.bringToFront()
+                        it
+                    }
+                }
+                bindCard(card, deck[currentIndex].data)
+                when (deck[currentIndex].swipe) {
+                    LIKED -> {
+                        card.translationX = 150f
+                    }
+
+                    REJECTED -> {
+                        card.translationX = -150f
+                    }
+                }
+                activesCards.add(0, card)
+                startComeBackAnimator(card)
+            }
+        }
+        deck[currentIndex].swipe = UNDEFINED
+    }
+
+    /**
+     * Methodes de recyclage
+     */
+    private fun removeAndRecycleView(card: SwiperCard){
+        activesCards.remove(card)
+        removeView(card)
+        recycledCard.add(card)
+        resetCard(card)
+        Log.d("SWIPER","Remove and Recyle of a card : ${activesCards.size} ${recycledCard.size}")
+    }
+
+    private fun resetCard(card: SwiperCard){
+        card.translationX = 0f
+    }
+
+    private fun bindCard(card: SwiperCard, data: SwiperData){
+        card.pictureUri = data.image
     }
 
     private fun createCard() : SwiperCard{
@@ -61,105 +153,136 @@ class Swiper @JvmOverloads constructor(
         return card
     }
 
-    private fun placeCards(){
-        val activeCardBeforeRender = activesCards.size
-        Log.d("SWIPER", "activeCardBeforeRender : $activeCardBeforeRender")
-        // Placement des nouvelles cartes
-        var i = 0
-        while(activesCards.size < maxLoadedCard && currentIndex + activeCardBeforeRender + i < deck.size) {
-            val card: SwiperCard = if(recycledCard.isEmpty()){
-                Log.d("SWIPER", "Card creation")
-                createCard()
-            } else {
-                Log.d("SWIPER", "Use of recycled Card")
-                recycledCard.removeFirst()
+    /**
+     * Definition des animation de cartes
+     */
+    private fun startSlideAnimator(card: SwiperCard, finalDest: Float){
+
+        val anim = ObjectAnimator.ofFloat(card, "translationX", finalDest)
+        anim.duration = 300
+
+        anim.addListener(object : AnimatorListenerAdapter() {
+            var onCancel = false
+            override fun onAnimationStart(animation: Animator) {
+                card.isEnabled = false
+                animatorMap[card] = animation
+                dyingCards++
+                currentIndex++
+                Log.d("SWIPER", "A anitmator was started")
             }
-            bindCard(card, deck[currentIndex + activeCardBeforeRender + i])
-            addView(card)
+            override fun onAnimationEnd(animation: Animator) {
+                Log.d("SWIPER", "A anitmator has ended")
+                if(!onCancel){
+                    removeAndRecycleView(card)
+                    dyingCards--
+                    checkLoadedCard()
+                }
+                animatorMap.remove(card)
+                card.isEnabled = true
+            }
+
+            override fun onAnimationCancel(animation: Animator) {
+                onCancel = true
+                Log.d("SWIPER", "A anitmator was cancelled")
+            }
+        })
+
+        anim.start()
+    }
+
+    private fun startComeBackAnimator(card: SwiperCard){
+        val anim = ObjectAnimator.ofFloat(card, "translationX", 0f)
+        anim.duration = 300
+        anim.doOnStart { card.isEnabled = false }
+        anim.doOnEnd { card.isEnabled = true }
+        anim.start()
+    }
+
+    /**
+     *  Verification des et chargement de cartes si nécessaire
+     */
+    private fun checkLoadedCard() {
+        var card = loadNextCard()
+        while(card != null){
             activesCards.add(card)
-            i++
-            card.revertAnim(y - card.height)
+            addView(card, 0)
+            card = loadNextCard()
         }
     }
 
-    fun addData(swiperData: SwiperData){
-        deck.add(swiperData)
-        placeCards()
+    private fun loadNextCard(): SwiperCard? {
+        return if ((currentIndex + (activesCards.size - dyingCards) < deck.size) && (activesCards.size < maxLoadedCard)) {
+            Log.d("SWIPER", "A Card is Loaded")
+            val card = if (recycledCard.size > 0) {
+                Log.d("SWIPER", "\t--> A recyled card is used")
+                recycledCard.removeFirst()
+            }else {
+                Log.d("SWIPER", "\t--> A card is created")
+                createCard()
+            }
+            bindCard(card, deck[currentIndex + (activesCards.size - dyingCards)].data)
+            card
+        } else null
     }
 
-    fun addData(swiperDatas: List<SwiperData>){
-        deck.addAll(swiperDatas)
-        placeCards()
-    }
 
-    fun getCurrentData(): SwiperData = deck[currentIndex]
-
-    // TODO : clearer et rendre propre
-    fun revertSwipedCard(){
-        if(currentIndex > 0){
-            currentIndex--
-            deletedImages.remove(getCurrentData())
-            placeCards()
-        }
-    }
-
-    override fun onCardActionDown(card: SwiperCard) {
-    }
-
-    override fun onCardActionMove(card: SwiperCard, velocityX: Float) {
-        card.translationX += velocityX
-    }
-    override fun onCardActionUp(card: SwiperCard) {
-        // TODO : utiliser left, right, etc. au lieu de width et height
-        if(card.x + (card.width/2) > width){
-            card.animateSwipe(width + 10f)
-            currentIndex++
-        } else if (card.x + (card.width/2) < x ){
-            card.animateSwipe(x - card.width - 60f)
-            deletedImages.add(deck[deck.size-1-currentIndex])
-            currentIndex++
-        }
-        else {
-            card.animateSwipe(-card.translationX)
-        }
-    }
-
+    /*
+     * Implmentation des callback de cartes
+     */
     override fun onAcceptButtonClicked(card: SwiperCard) {
-        // TODO : Refaire les calculs
-        card.animateSwipe(width + 10f)
-        currentIndex++
+        deck[currentIndex].swipe = LIKED
+        startSlideAnimator(card, right + 10f)
     }
 
     override fun onRejectButtonClicked(card: SwiperCard) {
-        // TODO : Corriger les valeurs hardcodé  (prendre en compte les Margin)
-        card.animateSwipe(x - card.width - 60f)
-        deletedImages.add(deck[deck.size-1-currentIndex])
-        currentIndex++
+        deck[currentIndex].swipe = REJECTED
+        startSlideAnimator(card, -(right + 10f))
     }
 
+    override fun onCardStartedSwiping(card: SwiperCard) {
+        // A voir pour le future
+    }
+
+    override fun onCardSwipingRight(card: SwiperCard, progress: Float, velocity: Float) {
+        card.translationX += progress + velocity
+    }
+
+    override fun onCardSwipingLeft(card: SwiperCard, progress: Float, velocity: Float) {
+        card.translationX += progress + velocity
+    }
+
+
     override fun onCardSwipedRight(card: SwiperCard) {
-        if(card.x + (card.width/2) > width){
-            card.animateSwipe(width + 10f)
-            currentIndex ++
+        if(card.x + (card.width/2) > right){
+            deck[currentIndex].swipe = LIKED
+            startSlideAnimator(card, right + 10f)
+        } else {
+            startComeBackAnimator(card)
         }
     }
 
     override fun onCardSwipedLeft(card: SwiperCard) {
-        if(card.x + (card.width/2) < x){
-            card.animateSwipe(x - 10f)
-            deletedImages.add(deck[deck.size-1-currentIndex])
-            currentIndex++
+        if(card.x + (card.width/2) < left){
+            deck[currentIndex].swipe = REJECTED
+            startSlideAnimator(card, -(right + 10f))
+        } else {
+            startComeBackAnimator(card)
         }
     }
 
-    // TODO : Si une carte termine son animation et que la suivante effectue la sienne (verifier si le requestLayout fais pas le bordel)
-    override fun onEndCardAnimation(card: SwiperCard) {
-        if(card.x > width || card.x < x) {
-            removeView(card)
-            Log.d("SWIPER", "A view was recycled : ${activesCards.remove(card)}")
-            recycledCard.add(card)
-        }
-    }
+    /**
+     * Wrapped Data Card contenant le resultat d'un swipe
+     */
+    private data class SwipedData(val data: SwiperData, var swipe: Int)
 
+
+    /**
+     * Définition des constantes
+     */
+    companion object{
+        const val UNDEFINED: Int = 0
+        const val LIKED: Int = 1
+        const val REJECTED: Int = 2
+    }
 
 }
