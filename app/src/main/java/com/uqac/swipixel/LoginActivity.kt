@@ -61,7 +61,7 @@ class LoginActivity : AppCompatActivity() {
 
         val btnLogin = findViewById<Button>(R.id.btn_login)
         etLoginEmail = findViewById(R.id.et_login_email)
-
+        etLoginPassword = findViewById(R.id.et_login_password)
 
         val passwordToggle = etLoginPassword
         passwordToggle.setOnClickListener {
