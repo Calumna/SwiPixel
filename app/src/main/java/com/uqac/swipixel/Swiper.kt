@@ -4,14 +4,10 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.content.Context
-import android.database.DataSetObserver
-import android.graphics.Color
-import android.net.Uri
 import android.util.AttributeSet
 import android.util.Log
 import android.view.Gravity
 import android.view.MotionEvent
-import android.widget.ArrayAdapter
 import android.widget.FrameLayout
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
