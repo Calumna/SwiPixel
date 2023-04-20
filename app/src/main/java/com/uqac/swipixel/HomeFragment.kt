@@ -89,7 +89,8 @@ class HomeFragment : Fragment(R.layout.fragment_home), SwiperCallback {
 
         val deleteButton = root.findViewById<ImageView>(R.id.delete_button)
         deleteButton.setOnClickListener {
-            val action = HomeFragmentDirections.actionHomeFragmentToBinFragment(cardDeck.getAllFlaggedData(Swiper.REJECTED).toTypedArray())
+            val action = HomeFragmentDirections.actionHomeFragmentToBinFragment(cardDeck.getAndRemoveAllFlaggedData(Swiper.REJECTED).toTypedArray())
+            nbDeletedImage = 0
             findNavController().navigate(action)
         }
 

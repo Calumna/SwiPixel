@@ -79,6 +79,24 @@ class Swiper @JvmOverloads constructor(
         }
     }
 
+    fun getAndRemoveAllFlaggedData(flag: Int = -1): List<SwiperData> {
+        return when(flag){
+            LIKED, REJECTED -> {
+                val ret = deck.subList(0, currentIndex).filter { it.swipe == flag }
+                deck.removeAll(ret.toSet())
+                currentIndex -= ret.size
+                ret.map { it.data }
+            }
+            UNDEFINED -> {
+                val ret = deck.subList(currentIndex, deck.size)
+                deck.removeAll(ret.toSet())
+                ret.map { it.data }
+            }
+
+            else -> deck.map { it.data }
+        }
+    }
+
     fun getNbOfRemainingData(): Int{
         return deck.size - currentIndex
     }
@@ -141,8 +159,8 @@ class Swiper @JvmOverloads constructor(
                 activesCards.add(0, card)
                 startComeBackAnimator(card)
             }
+            deck[currentIndex].swipe = UNDEFINED
         }
-        deck[currentIndex].swipe = UNDEFINED
     }
 
     /**
