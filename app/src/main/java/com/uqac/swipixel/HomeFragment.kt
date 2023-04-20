@@ -3,16 +3,13 @@ package com.uqac.swipixel
 import android.app.AlertDialog
 import android.content.ContentUris
 import android.content.Context
-import android.database.Cursor
 import android.location.Geocoder
 import android.location.Location
 import android.media.ExifInterface
 import android.net.Uri
-import android.os.Build
-import android.os.Environment
-import android.provider.DocumentsContract
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -23,26 +20,22 @@ import android.widget.ImageView
 import androidx.activity.result.ActivityResultLauncher
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.net.toFile
 import androidx.core.view.isEmpty
-import androidx.core.view.size
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
-import java.lang.Math.abs
-import java.lang.Math.floor
 import java.util.*
 import kotlin.collections.ArrayList
 
-class HomeFragment : Fragment(R.layout.fragment_home), CardDeckChangeListener {
+class HomeFragment : Fragment(R.layout.fragment_home), SwiperCallback {
 
     private lateinit var cardDeck: Swiper
     private lateinit var textRemainingPics : TextView
     private lateinit var textNbDeletedImgaes : TextView
+
+    private var nbDeletedImage: Int = 0
 
     // variable pour afficher une photo de la galerie
 
@@ -58,23 +51,19 @@ class HomeFragment : Fragment(R.layout.fragment_home), CardDeckChangeListener {
         textNbDeletedImgaes = root.findViewById(R.id.nb_deleted_images)
 
         cardDeck = root.findViewById<Swiper>(R.id.cardDeck);
+        cardDeck.callback = this
         val  pickMultipleMedia: ActivityResultLauncher<String> = registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
             // Do something with the selected URIs
 
             if (uris.isNotEmpty()) {
-                if(cardDeck.currentIndex == cardDeck.deckSize){
-                    cardDeck.clearDeck()
-                    selectedImages.clear()
-                }
                 selectedImages = uris.map {
                     SwiperData(it)
                 } as MutableList<SwiperData>
 
                 cardDeck.addData(selectedImages)
-                textRemainingPics.text = cardDeck.deckSize.toString()
+                textRemainingPics.text = cardDeck.getNbOfRemainingData().toString()
             }
         }
-        cardDeck.listener = this
 
         // Ecouter le bouton pour charger l'image
 
@@ -179,9 +168,24 @@ class HomeFragment : Fragment(R.layout.fragment_home), CardDeckChangeListener {
         return ContentUris.withAppendedId(mediaUri, id!!)
     }
 
-    override fun onCardDeckChanged() {
-        // Mettre à jour la vue en conséquence
-        textRemainingPics.text = (selectedImages.size - cardDeck.currentIndex).toString()
-        textNbDeletedImgaes.text = cardDeck.deletedImages.size.toString()
+    override fun onTopCardLiked(data: SwiperData) {
+        textRemainingPics.text = cardDeck.getNbOfRemainingData().toString()
+    }
+
+    override fun onTopCardRejected(data: SwiperData) {
+        Log.d("HOMEFRAGMENT", "rejected card")
+        textRemainingPics.text = cardDeck.getNbOfRemainingData().toString()
+        nbDeletedImage++
+        textNbDeletedImgaes.text = (nbDeletedImage).toString()
+    }
+
+    override fun onBackwardLikedImage(data: SwiperData) {
+        textRemainingPics.text = cardDeck.getNbOfRemainingData().toString()
+    }
+
+    override fun onBackwardRejectedImage(data: SwiperData) {
+        textRemainingPics.text = cardDeck.getNbOfRemainingData().toString()
+        nbDeletedImage--
+        textNbDeletedImgaes.text = (nbDeletedImage).toString()
     }
 }

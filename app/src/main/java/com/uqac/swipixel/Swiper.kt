@@ -26,7 +26,10 @@ class Swiper @JvmOverloads constructor(
     private val animatorMap: HashMap<SwiperCard, Animator> = HashMap()
     // var deletedImages: ArrayList<SwiperData>  = ArrayList()
 
+    var callback: SwiperCallback? = null
+
     var currentIndex: Int = 0
+        private set
     var maxLoadedCard: Int = 10
 
     // TODO : placer l'offset (faire attention a la suppression des vue)
@@ -58,6 +61,7 @@ class Swiper @JvmOverloads constructor(
         deck.addAll(swiperDatas.map {
             SwipedData(it, UNDEFINED)
         })
+        Log.d("SWIPER", "Deck size after add : ${deck.size}")
         checkLoadedCard()
     }
     fun getCurrentData(): SwiperData = deck[currentIndex].data
@@ -75,6 +79,15 @@ class Swiper @JvmOverloads constructor(
         }
     }
 
+    fun getNbOfRemainingData(): Int{
+        return deck.size - currentIndex
+    }
+
+    fun getDeckSize(): Int{
+        return deck.size
+    }
+
+
     fun swipeRightCurrentCard(){
         startSlideAnimator(activesCards[dyingCards], right + 10f)
     }
@@ -87,6 +100,11 @@ class Swiper @JvmOverloads constructor(
         if(currentIndex > 0) {
             Log.d("SWIPER", "Backward a card")
             currentIndex--
+
+            // Backward Callback
+            if(deck[currentIndex].swipe == LIKED) callback?.onBackwardLikedImage(deck[currentIndex].data)
+            else if(deck[currentIndex].swipe == REJECTED) callback?.onBackwardRejectedImage(deck[currentIndex].data)
+
             if (dyingCards > 0) {
                 Log.d("SWIPER", "\t--> Use of dying Card")
                 animatorMap[activesCards[dyingCards - 1]]?.let {
@@ -241,11 +259,13 @@ class Swiper @JvmOverloads constructor(
     override fun onAcceptButtonClicked(card: SwiperCard) {
         deck[currentIndex].swipe = LIKED
         startSlideAnimator(card, right + 10f)
+        callback?.onTopCardLiked(deck[currentIndex - 1].data)
     }
 
     override fun onRejectButtonClicked(card: SwiperCard) {
         deck[currentIndex].swipe = REJECTED
         startSlideAnimator(card, -(right + 10f))
+        callback?.onTopCardRejected(deck[currentIndex - 1].data)
     }
 
     override fun onCardStartedSwiping(card: SwiperCard) {
@@ -265,6 +285,7 @@ class Swiper @JvmOverloads constructor(
         if(card.x + (card.width/2) > right){
             deck[currentIndex].swipe = LIKED
             startSlideAnimator(card, right + 10f)
+            callback?.onTopCardLiked(deck[currentIndex - 1].data)
         } else {
             startComeBackAnimator(card)
         }
@@ -274,6 +295,7 @@ class Swiper @JvmOverloads constructor(
         if(card.x + (card.width/2) < left){
             deck[currentIndex].swipe = REJECTED
             startSlideAnimator(card, -(right + 10f))
+            callback?.onTopCardRejected(deck[currentIndex - 1].data)
         } else {
             startComeBackAnimator(card)
         }
