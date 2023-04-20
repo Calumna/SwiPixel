@@ -44,5 +44,6 @@
     <string name="pick_photos">Pick photos</string>
     <string name="info_button">info button</string>
     <string name="remaining_pictures">Remaining pictures :</string>
+    <string name="revert_btn">Revert Button</string>
     <string name="_0">0</string>
 </resources>

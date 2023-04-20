@@ -66,17 +66,18 @@
             app:layout_constraintTop_toTopOf="@+id/guideline"
             app:srcCompat="@drawable/delete" />
 
-        <Button
+        <ImageView
             android:id="@+id/revert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/revert"
+            android:contentDescription="@string/revert_btn"
+            app:itemIconTint="?attr/colorOnBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/remaining_pictures"
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardDeck"
-            tools:ignore="HardcodedText" />
+            app:srcCompat="@drawable/undo" />
 
         <ImageButton
             android:id="@+id/info_button"

@@ -70,7 +70,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), SwiperCallback {
         pickButton.setOnClickListener {
             pickMultipleMedia.launch("image/*") }
 
-        val revertButton = root.findViewById<Button>(R.id.revert)
+        val revertButton = root.findViewById<ImageView>(R.id.revert)
         revertButton.setOnClickListener { cardDeck.backwardPreviousCard() }
 
 
