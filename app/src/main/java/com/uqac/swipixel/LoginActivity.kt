@@ -133,7 +133,7 @@ class LoginActivity : AppCompatActivity() {
         btSignIn = findViewById(R.id.googleSignInBtn)
 
         val googleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("1011379569359-s3fqcampg8gddln38rdptq0pjujderni.apps.googleusercontent.com")
+            .requestIdToken("801365896002-3ba9ccsjckr1fiu9hn9s212pt5lcd42j.apps.googleusercontent.com")
             .requestEmail()
             .build()
 
