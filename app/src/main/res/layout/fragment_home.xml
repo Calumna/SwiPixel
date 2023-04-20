@@ -134,16 +134,4 @@
             app:layout_constraintTop_toTopOf="@+id/guideline"
             tools:ignore="TextContrastCheck" />
 
-        <ImageButton
-            android:id="@+id/binButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#00FFFFFF"
-            android:contentDescription="@string/btn_delete"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/delete" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
