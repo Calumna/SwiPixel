@@ -9,7 +9,6 @@ import android.media.ExifInterface
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -173,7 +172,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), SwiperCallback {
     }
 
     override fun onTopCardRejected(data: SwiperData) {
-        Log.d("HOMEFRAGMENT", "rejected card")
         textRemainingPics.text = cardDeck.getNbOfRemainingData().toString()
         nbDeletedImage++
         textNbDeletedImgaes.text = (nbDeletedImage).toString()

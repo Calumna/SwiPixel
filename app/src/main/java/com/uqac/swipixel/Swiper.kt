@@ -269,11 +269,12 @@ class Swiper @JvmOverloads constructor(
     }
 
     override fun onCardStartedSwiping(card: SwiperCard) {
-        // A voir pour le future
+        // A voir pour le future si utile
     }
 
     override fun onCardSwipingRight(card: SwiperCard, progress: Float, velocity: Float) {
         card.translationX += progress + velocity
+
     }
 
     override fun onCardSwipingLeft(card: SwiperCard, progress: Float, velocity: Float) {
@@ -282,6 +283,8 @@ class Swiper @JvmOverloads constructor(
 
 
     override fun onCardSwipedRight(card: SwiperCard) {
+
+        Log.d("SWIPER", "right of Swiper : $right ${card.x + (card.width/2)}")
         if(card.x + (card.width/2) > right){
             deck[currentIndex].swipe = LIKED
             startSlideAnimator(card, right + 10f)

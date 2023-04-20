@@ -149,35 +149,6 @@ class SwiperCard(context: Context, attrs: AttributeSet? = null, defStyleAttr: In
         addView(layout)
     }
 
-//    // TODO : Clearer et rendre plus propre
-//    fun animateSwipe(to: Float) {
-//        val animaton = ObjectAnimator.ofFloat(this, "translationX", translationX + to).apply {
-//            duration = 1000
-//            start()
-//        }
-//
-//        animaton.addListener(object : AnimatorListener{
-//            override fun onAnimationStart(p0: Animator) {}
-//            override fun onAnimationCancel(p0: Animator) {}
-//            override fun onAnimationRepeat(p0: Animator) {}
-//
-//            override fun onAnimationEnd(p0: Animator) {
-//                swiperCardCallBack?.onEndCardAnimation(this@SwiperCard)
-//            }
-//
-//        })
-//    }
-
-//    // TODO : rendre plus propre
-//    fun revertAnim(from: Float){
-//        this.translationY = from
-//        ObjectAnimator.ofFloat(this, "translationY", 0f).apply {
-//            duration = 300
-//            start()
-//        }
-//    }
-
-    //fun animateSwipeLeft(from: Float, to: Float)
 
     override fun onTouchEvent(e: MotionEvent): Boolean {
         if(!isEnabled)
@@ -188,37 +159,35 @@ class SwiperCard(context: Context, attrs: AttributeSet? = null, defStyleAttr: In
                 velocityTracker?.clear()
                 velocityTracker = velocityTracker ?: VelocityTracker.obtain()
 
-                initialTouchX = e.getX(e.getPointerId(e.actionIndex))
+                initialTouchX = e.rawX
 
                 swiperCardCallBack?.onCardStartedSwiping(this)
             }
 
             MotionEvent.ACTION_MOVE -> {
                 velocityTracker?.let {
-                    val pointerId = e.getPointerId(e.actionIndex)
                     it.addMovement(e)
-                    it.computeCurrentVelocity(50)
+                    it.computeCurrentVelocity(1)
 
                     // vecteur representant le mouvement du doit sur l'horizontal
-                    val dx = e.getX(pointerId) - initialTouchX
-
-                    if(dx < 0){
-                        swiperCardCallBack?.onCardSwipingRight(this, dx, abs(it.getXVelocity(pointerId)) )
+                    val dx = e.rawX - initialTouchX
+                    if(dx > 0){
+                        swiperCardCallBack?.onCardSwipingRight(this, dx, abs(it.getXVelocity(0)) )
                     } else {
-                        swiperCardCallBack?.onCardSwipingLeft(this, dx, abs(it.getXVelocity(pointerId)))
+                        swiperCardCallBack?.onCardSwipingLeft(this, dx, abs(it.getXVelocity(0)))
                     }
                 }
             }
 
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                velocityTracker?.recycle()
-                velocityTracker = null
-                val dx = e.getX(e.getPointerId(e.actionIndex)) - initialTouchX
-                if(dx < 0 ){
+                val dx = e.rawX - initialTouchX
+                if(dx > 0 ){
                     swiperCardCallBack?.onCardSwipedRight(this)
                 } else{
                     swiperCardCallBack?.onCardSwipedLeft(this)
                 }
+                velocityTracker?.recycle()
+                velocityTracker = null
             }
             else -> super.onTouchEvent(e)
         }
